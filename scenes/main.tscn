@@ -41,6 +41,16 @@ tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAACAAQAAAAEAAU
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(8, -56)
+position = Vector2(8, -24)
 
 [node name="Card" parent="Control" instance=ExtResource("2_ur03e")]
+offset_left = 10.0
+offset_top = 495.0
+offset_right = 106.0
+offset_bottom = 639.0
+
+[node name="Card2" parent="Control" instance=ExtResource("2_ur03e")]
+offset_left = 121.0
+offset_top = 495.0
+offset_right = 217.0
+offset_bottom = 639.0
