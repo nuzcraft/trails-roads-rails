@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxvwx7q4ct2qd"]
+[gd_scene load_steps=4 format=3 uid="uid://cxvwx7q4ct2qd"]
 
+[ext_resource type="Script" path="res://scenes/card.gd" id="1_klpha"]
 [ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_rxqnl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vt1ow"]
@@ -14,6 +15,7 @@ offset_right = 48.0
 offset_bottom = 48.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
+script = ExtResource("1_klpha")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -37,3 +39,5 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_vt1ow")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

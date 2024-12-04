@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=5 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
+[ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
 [ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card.tscn" id="2_ur03e"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_ukryv")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -12,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
 layout_mode = 1
@@ -36,9 +40,7 @@ tile_set = ExtResource("1_ow657")
 tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAACAAQAAAAEAAUAAAACAAUAAAACAAYAAAADAAUAAAACAAYAAAAEAAUAAAACAAYAAAAFAAUAAAADAAkAAAAFAAQAAAAAAAgAAAAFAAMAAAABAAcAAAAJAAcAAAAEAAYAAAAEAAIAAAAEAAYAAAACAAgAAAAEAAYAAAAFAAkAAAAEAAUAAAAIAAkAAAAEAAUAAAAJAAEAAAAEAAYAAAAJAAIAAAAEAAYAAAAKAAIAAAAEAAUAAAALAAUAAAAEAAYAAAABAAIAAAAQAAMAAAALAAIAAAAQAAIAAAABAAUAAAABAAkAAAAGAAMAAAACAAYAAAAHAAMAAAADAAkAAAAHAAIAAAAAAAgAAAAHAAEAAAABAAcAAAAIAAEAAAADAAcAAAAIAAIAAAAAAAgAAAAIAAMAAAAAAAgAAAAIAAQAAAABAAkAAAAJAAQAAAACAAYAAAAKAAQAAAADAAcAAAAKAAUAAAAAAAgAAAAKAAYAAAABAAkAAAALAAYAAAACAAYAAAAMAAYAAAADAAkAAAAMAAUAAAAAAAgAAAAMAAQAAAAAAAgAAAAMAAMAAAAAAAgAAAAMAAIAAAADAAcAAAA=")
 tile_set = ExtResource("1_ow657")
 
+[node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
+position = Vector2(8, -56)
+
 [node name="Card" parent="Control" instance=ExtResource("2_ur03e")]
-layout_mode = 1
-offset_left = 62.0
-offset_top = 534.0
-offset_right = 62.0
-offset_bottom = 534.0

@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://7sblqvhw6rhk"]
+
+[ext_resource type="Script" path="res://scenes/grid_cursor.gd" id="1_bn804"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_xxadd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tu0b7"]
+atlas = ExtResource("1_xxadd")
+region = Rect2(112, 48, 16, 16)
+
+[node name="GridCursor" type="Node2D"]
+script = ExtResource("1_bn804")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_tu0b7")
