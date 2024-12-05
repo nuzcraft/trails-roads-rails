@@ -35,13 +35,29 @@ layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
+[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 1
+
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_vertical = 6
 texture = SubResource("AtlasTexture_vt1ow")
 
-[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 1
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "road"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer3" type="Control" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
 mouse_filter = 1
