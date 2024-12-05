@@ -3,6 +3,8 @@ class_name Card
 
 signal card_dropped(card, atlas_position)
 
+@export var card_name: String = "single road"
+
 var return_pos: Vector2
 
 enum STATE {
@@ -18,6 +20,7 @@ func _ready() -> void:
 	return_pos = position
 	var tex: AtlasTexture = $PanelContainer/VBoxContainer/TextureRect.texture
 	atlas_pos = tex.region.position / 16
+	$PanelContainer/VBoxContainer/Label.text = card_name
 	
 func _process(delta: float) -> void:
 	match current_state:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cxvwx7q4ct2qd"]
 
-[ext_resource type="Script" path="res://scenes/card.gd" id="1_klpha"]
+[ext_resource type="Script" path="res://scenes/card/card.gd" id="1_klpha"]
 [ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_rxqnl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vt1ow"]
@@ -43,6 +43,7 @@ mouse_filter = 1
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 6
 texture = SubResource("AtlasTexture_vt1ow")
 
@@ -52,10 +53,12 @@ size_flags_vertical = 6
 mouse_filter = 1
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
-text = "road"
+text = "single road"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Spacer3" type="Control" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2

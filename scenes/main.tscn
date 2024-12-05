@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=6 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
 [ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
-[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card.tscn" id="2_ur03e"]
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="2_ur03e"]
+[ext_resource type="PackedScene" uid="uid://dqnmna5yxls28" path="res://scenes/card/road/vert_road_card.tscn" id="5_cmo2r"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_ukryv")
@@ -41,16 +42,76 @@ tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAACAAQAAAAEAAU
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(152, -24)
+position = Vector2(136, 72)
 
-[node name="Card" parent="Control" instance=ExtResource("2_ur03e")]
-offset_left = 10.0
-offset_top = 495.0
-offset_right = 106.0
-offset_bottom = 639.0
+[node name="HandContainer" type="GridContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.75
+anchor_right = 0.75
+anchor_bottom = 1.0
+columns = 8
 
-[node name="Card2" parent="Control" instance=ExtResource("2_ur03e")]
-offset_left = 121.0
-offset_top = 495.0
-offset_right = 217.0
-offset_bottom = 639.0
+[node name="CardContainer" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Card" parent="Control/HandContainer/CardContainer" instance=ExtResource("2_ur03e")]
+layout_mode = 2
+
+[node name="CardContainer2" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Card2" parent="Control/HandContainer/CardContainer2" instance=ExtResource("2_ur03e")]
+layout_mode = 2
+
+[node name="CardContainer3" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard" parent="Control/HandContainer/CardContainer3" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
+
+[node name="CardContainer4" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard2" parent="Control/HandContainer/CardContainer4" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
+
+[node name="CardContainer5" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard3" parent="Control/HandContainer/CardContainer5" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
+
+[node name="CardContainer6" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard4" parent="Control/HandContainer/CardContainer6" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
+
+[node name="CardContainer7" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard5" parent="Control/HandContainer/CardContainer7" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
+
+[node name="CardContainer8" type="CenterContainer" parent="Control/HandContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VertRoadCard6" parent="Control/HandContainer/CardContainer8" instance=ExtResource("5_cmo2r")]
+layout_mode = 2
