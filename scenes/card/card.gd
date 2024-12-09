@@ -2,6 +2,8 @@ extends Control
 class_name Card
 
 signal card_dropped(card, atlas_position)
+signal card_picked_up(card)
+signal card_returned_to_hand(card)
 
 @export var card_name: String = "single road"
 @export var connection_array: Array[String] = ["N", "S", "E", "W"]
@@ -52,9 +54,16 @@ func switch_state(state: int) -> void:
 	match state:
 		STATE.STATIC:
 			var tween = get_tree().create_tween()
+			tween.finished.connect(on_static_tween_finished)
 			tween.set_ease(Tween.EASE_IN_OUT)
 			tween.tween_property(self, "position", return_pos, 0.2)
 			#tween.parallel().tween_property(self, "global_position", return_global_pos, 0.2)
 			current_state = state
+		STATE.FOLLOWING:
+			card_picked_up.emit(self)
+			current_state = state
 		_:
 			current_state = state
+
+func on_static_tween_finished():
+	card_returned_to_hand.emit(self)

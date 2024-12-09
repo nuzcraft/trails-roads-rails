@@ -4,18 +4,26 @@ extends Node
 @onready var tile_map_layer_base: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerBase
 @onready var tile_map_layer_path: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerPath
 @onready var label: Label = $Control/SubViewportContainer/SubViewport2/Label
+@onready var hand_container: GridContainer = $Control/HandContainer
+
+# card types
+const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
 
 var astar: AStar2D
+var all_cards: Array[Card]
+var hand_cards: Array[Card]
+var deck_cards: Array[Card]
+var cards_in_play: Dictionary # [Vector2, Card]
 var source := Vector2(1, 2)
 var target := Vector2(11, 2)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	sub_viewport_container.stretch_shrink = 3
-	$Control/HandContainer/CardContainer/Card.card_dropped.connect(on_card_dropped)
-	$Control/HandContainer/CardContainer2/Card2.card_dropped.connect(on_card_dropped)
-	$Control/HandContainer/CardContainer3/VertRoadCard.card_dropped.connect(on_card_dropped)
-	$Control/HandContainer/CardContainer4/VertRoadCard2.card_dropped.connect(on_card_dropped)
+	
+	for i in 8:
+		var crd = VERT_ROAD_CARD.instantiate()
+		add_card_to_hand(crd)
 	
 	label.text = "not connected"
 	astar = initialize_astar()
@@ -34,6 +42,13 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 		label.text = "you win"
 	else:
 		label.text = "not a path"
+		
+func on_card_picked_up(card: Card) -> void:
+	#card.reparent(self)
+	pass
+		
+func on_card_returned_to_hand(card: Card) -> void:
+	hand_container.queue_sort()
 	
 func initialize_astar() -> AStar2D:
 	var astar: AStar2D = AStar2D.new()
@@ -64,3 +79,10 @@ func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
 	var src_id = astar.get_closest_point(src)
 	var trgt_id = astar.get_closest_point(trgt)
 	return astar.get_point_path(src_id, trgt_id)
+	
+func add_card_to_hand(card: Card) -> void:
+	hand_container.add_child(card)
+	card.card_dropped.connect(on_card_dropped)
+	card.card_picked_up.connect(on_card_picked_up)
+	card.card_returned_to_hand.connect(on_card_returned_to_hand)
+	hand_container.queue_sort()
