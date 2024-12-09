@@ -6,6 +6,7 @@ signal card_dropped(card, atlas_position)
 @export var card_name: String = "single road"
 
 var return_pos: Vector2
+#var return_global_pos: Vector2
 
 enum STATE {
 	STATIC,
@@ -18,6 +19,7 @@ var atlas_pos: Vector2
 
 func _ready() -> void:
 	return_pos = position
+	#return_global_pos = global_position
 	var tex: AtlasTexture = $PanelContainer/VBoxContainer/TextureRect.texture
 	atlas_pos = tex.region.position / 16
 	$PanelContainer/VBoxContainer/Label.text = card_name
@@ -27,7 +29,7 @@ func _process(delta: float) -> void:
 		STATE.STATIC:
 			modulate.a = 1.0
 		STATE.FOLLOWING:
-			position = round(get_global_mouse_position() - (size / 4))
+			global_position = round(get_global_mouse_position() - (size / 4))
 			modulate.a = 0.5
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -51,6 +53,7 @@ func switch_state(state: int) -> void:
 			var tween = get_tree().create_tween()
 			tween.set_ease(Tween.EASE_IN_OUT)
 			tween.tween_property(self, "position", return_pos, 0.2)
+			#tween.parallel().tween_property(self, "global_position", return_global_pos, 0.2)
 			current_state = state
 		_:
 			current_state = state
