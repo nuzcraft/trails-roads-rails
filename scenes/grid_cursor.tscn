@@ -8,6 +8,7 @@ atlas = ExtResource("1_xxadd")
 region = Rect2(112, 48, 16, 16)
 
 [node name="GridCursor" type="Node2D"]
+position = Vector2(56, -24)
 script = ExtResource("1_bn804")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

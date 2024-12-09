@@ -1,10 +1,17 @@
-[gd_scene load_steps=6 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=7 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
 [ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
 [ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="2_ur03e"]
 [ext_resource type="PackedScene" uid="uid://dqnmna5yxls28" path="res://scenes/card/road/vert_road_card.tscn" id="5_cmo2r"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bfa1"]
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.333333)
+shadow_offset = Vector2(2, 2)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_ukryv")
@@ -45,7 +52,17 @@ tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAAJAAcAAAAEAAYAAAAEAAIAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(216, 24)
+position = Vector2(1160, 40)
+
+[node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
+transparent_bg = true
+size = Vector2i(864, 486)
+
+[node name="Label" type="Label" parent="Control/SubViewportContainer/SubViewport2"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "boring text"
+label_settings = SubResource("LabelSettings_1bfa1")
 
 [node name="HandContainer" type="GridContainer" parent="Control"]
 layout_mode = 1

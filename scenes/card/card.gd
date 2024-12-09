@@ -4,6 +4,7 @@ class_name Card
 signal card_dropped(card, atlas_position)
 
 @export var card_name: String = "single road"
+@export var connection_array: Array[String] = ["N", "S", "E", "W"]
 
 var return_pos: Vector2
 #var return_global_pos: Vector2
