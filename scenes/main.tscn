@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=7 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
 [ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="2_igm71"]
+[ext_resource type="FontFile" uid="uid://cuorltbqog0vh" path="res://assets/somepx-font/RulerGold.ttf" id="5_olkcq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1bfa1"]
+font = ExtResource("5_olkcq")
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
@@ -22,6 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme = ExtResource("2_igm71")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
 layout_mode = 1
@@ -46,11 +50,11 @@ tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAABAAUAAAAAAAg
 tile_set = ExtResource("1_ow657")
 
 [node name="TileMapLayerFeature" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
-tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAAJAAcAAAAEAAYAAAAEAAIAAAAEAAYAAAACAAgAAAAEAAYAAAAFAAkAAAAEAAUAAAAIAAkAAAAEAAUAAAAJAAEAAAAEAAYAAAAJAAIAAAAEAAYAAAAKAAIAAAAEAAUAAAALAAUAAAAEAAYAAAA=")
+tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAAJAAcAAAAEAAYAAAAEAAIAAAAEAAYAAAACAAgAAAAEAAYAAAAFAAkAAAAEAAUAAAAIAAkAAAAEAAUAAAAJAAEAAAAEAAYAAAAJAAIAAAAEAAYAAAAKAAIAAAAEAAUAAAALAAUAAAAEAAYAAAAEAAMAAAAFAAAAAAAFAAMAAAAFAAAAAAA=")
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(744, 312)
+position = Vector2(1368, 88)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -71,3 +75,32 @@ anchor_top = 0.75
 anchor_right = 0.75
 anchor_bottom = 1.0
 columns = 8
+
+[node name="CenterContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/CenterContainer"]
+custom_minimum_size = Vector2(96, 144)
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="Control/CenterContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer/PanelContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Control/CenterContainer/PanelContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "text"
+horizontal_alignment = 1
