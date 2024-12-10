@@ -52,7 +52,8 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2i = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
-	card.queue_free()
+	cards_in_play[cell_coord] = card
+	card.get_parent().remove_child(card)
 	if check_astar_path(source, target):
 		label.text = "you win"
 	else:
