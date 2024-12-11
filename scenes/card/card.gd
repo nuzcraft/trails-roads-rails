@@ -7,6 +7,8 @@ signal card_returned_to_hand(card)
 
 @export var card_name: String = "single road"
 @export var connection_array: Array[String] = ["N", "S", "E", "W"]
+@export var nice_score: int
+@export var exciting_score: int
 
 var return_pos: Vector2
 #var return_global_pos: Vector2

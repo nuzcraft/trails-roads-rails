@@ -10,6 +10,7 @@ region = Rect2(32, 96, 16, 16)
 [node name="HorizRoadCard" instance=ExtResource("1_beag0")]
 card_name = "horizontal road"
 connection_array = Array[String](["E", "W"])
+nice_score = 2
 
 [node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
 texture = SubResource("AtlasTexture_ruo1k")

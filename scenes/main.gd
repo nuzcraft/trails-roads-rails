@@ -49,13 +49,17 @@ func _process(delta: float) -> void:
 	deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
-	var cell_coord: Vector2i = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
+	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
 	cards_in_play[cell_coord] = card
 	card.get_parent().remove_child(card)
 	if check_astar_path(source, target):
 		label.text = "you win"
+		var path = check_astar_path(source, target)
+		for pos in path:
+			if cards_in_play.has(pos):
+				print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
 	else:
 		label.text = "not a path"
 		
