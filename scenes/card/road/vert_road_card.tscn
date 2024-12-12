@@ -11,6 +11,7 @@ region = Rect2(0, 128, 16, 16)
 card_name = "vertical road"
 connection_array = Array[String](["N", "S"])
 nice_score = 2
+forest_exciting_modifier = 1
 
 [node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
 texture = SubResource("AtlasTexture_5yw3f")

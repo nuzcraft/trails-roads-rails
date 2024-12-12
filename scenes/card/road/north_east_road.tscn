@@ -11,6 +11,7 @@ region = Rect2(16, 144, 16, 16)
 card_name = "turn road"
 connection_array = Array[String](["N", "E"])
 nice_score = 3
+forest_exciting_modifier = 1
 
 [node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
 texture = SubResource("AtlasTexture_w11q1")

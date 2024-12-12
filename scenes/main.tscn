@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=12 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -12,6 +12,47 @@ outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 0.333333)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_alf16"]
+font_size = 48
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3gfl8"]
+font_size = 32
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tkuq"]
+bg_color = Color(0, 0.603922, 0.862745, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 3
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2ixvb"]
+font_size = 32
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bo3tb"]
+bg_color = Color(0.909804, 0.270588, 0.215686, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 3
 shadow_offset = Vector2(2, 2)
 
 [node name="Main" type="Node"]
@@ -50,11 +91,11 @@ tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAABAAUAAAAAAAg
 tile_set = ExtResource("1_ow657")
 
 [node name="TileMapLayerFeature" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
-tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAAJAAcAAAAEAAYAAAAEAAIAAAAEAAYAAAACAAgAAAAEAAYAAAAFAAkAAAAEAAUAAAAIAAkAAAAEAAUAAAAJAAEAAAAEAAYAAAAJAAIAAAAEAAYAAAAKAAIAAAAEAAUAAAALAAUAAAAEAAYAAAAEAAMAAAAFAAAAAAAFAAMAAAAFAAAAAAA=")
+tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAA=")
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(1032, 440)
+position = Vector2(1576, -152)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -104,3 +145,113 @@ alignment = 1
 layout_mode = 2
 text = "text"
 horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.75
+
+[node name="TitleLabel" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Trails, Roads,
+& Rails"
+label_settings = SubResource("LabelSettings_alf16")
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TotalLabel" type="Label" parent="Control/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Total:"
+label_settings = SubResource("LabelSettings_3gfl8")
+horizontal_alignment = 2
+
+[node name="TotalValueLabel" type="Label" parent="Control/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "1"
+label_settings = SubResource("LabelSettings_3gfl8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="NicePanelContainer" type="PanelContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5tkuq")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="NiceLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Nice"
+label_settings = SubResource("LabelSettings_2ixvb")
+horizontal_alignment = 2
+
+[node name="NiceValueLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_2ixvb")
+horizontal_alignment = 2
+
+[node name="XLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "X"
+label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="ExcitingPanelContainer" type="PanelContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bo3tb")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ExcitingLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Exciting"
+label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="ExcitingValueLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_2ixvb")

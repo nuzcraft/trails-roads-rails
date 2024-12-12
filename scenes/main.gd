@@ -3,14 +3,24 @@ extends Node
 @onready var sub_viewport_container: SubViewportContainer = $Control/SubViewportContainer
 @onready var tile_map_layer_base: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerBase
 @onready var tile_map_layer_path: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerPath
+@onready var tile_map_layer_feature: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerFeature
 @onready var label: Label = $Control/SubViewportContainer/SubViewport2/Label
 @onready var hand_container: GridContainer = $Control/HandContainer
 @onready var deck_label: Label = $Control/CenterContainer/PanelContainer/Panel/VBoxContainer/Label
+@onready var nice_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer/NiceValueLabel
+@onready var exciting_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer/ExcitingValueLabel
+@onready var total_value_label: Label = $Control/VBoxContainer/PanelContainer/HBoxContainer/TotalValueLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
 const HORIZ_ROAD_CARD = preload("res://scenes/card/road/horiz_road_card.tscn")
 const NORTH_EAST_ROAD = preload("res://scenes/card/road/north_east_road.tscn")
+
+# other scenes
+const POP_UP = preload("res://scenes/pop_up.tscn")
+
+# feature atlas position
+const FOREST_ATLAS: Array[Vector2] = [Vector2(4, 5), Vector2(4, 6)]
 
 var astar: AStar2D
 var all_cards: Array[Card]
@@ -19,6 +29,10 @@ var deck_cards: Array[Card]
 var cards_in_play: Dictionary # [Vector2, Card]
 var source: Vector2
 var target: Vector2
+
+var nice_score: int = 1
+var exciting_score: int = 1
+var total_score: int = 1
 
 var rng := RandomNumberGenerator.new()
 
@@ -47,6 +61,9 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
+	nice_value_label.text = str(nice_score)
+	exciting_value_label.text = str(exciting_score)
+	total_value_label.text = str(total_score)
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
@@ -57,9 +74,7 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	if check_astar_path(source, target):
 		label.text = "you win"
 		var path = check_astar_path(source, target)
-		for pos in path:
-			if cards_in_play.has(pos):
-				print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
+		tally_score(path)
 	else:
 		label.text = "not a path"
 		
@@ -142,3 +157,60 @@ func generate_map() -> Array[Vector2]:
 	tile_map_layer_path.set_cell(src, 0, flag_array.pick_random())
 	tile_map_layer_path.set_cell(trgt, 0, flag_array.pick_random())
 	return [src, trgt]
+	
+func tally_score(path: Array) -> void:
+	for pos in path:
+		if cards_in_play.has(pos):
+			#print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
+			var nice = cards_in_play[pos].nice_score
+			var exciting = cards_in_play[pos].exciting_score
+			
+			if nice: 
+				var pop = POP_UP.instantiate()
+				pop.operator = "+"
+				pop.amount = nice
+				pop.mod = Color.DODGER_BLUE
+				sub_viewport_container.add_child(pop)
+				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+				await get_tree().create_timer(0.4).timeout
+				nice_score += nice
+				total_score = nice_score * exciting_score
+			
+			if exciting:
+				var pop = POP_UP.instantiate()
+				pop.operator = "+"
+				pop.amount = exciting
+				pop.mod = Color.LIGHT_CORAL
+				sub_viewport_container.add_child(pop)
+				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+				await get_tree().create_timer(0.4).timeout
+				exciting_score += exciting
+				total_score = nice_score * exciting_score
+			
+			# check for forest modifier
+			for cell in tile_map_layer_feature.get_used_cells():
+				if Vector2(cell) == pos and \
+						FOREST_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell))):
+					var forest_nice = cards_in_play[pos].forest_nice_modifier
+					var forest_exciting = cards_in_play[pos].forest_exciting_modifier
+					if forest_nice: 
+						var pop = POP_UP.instantiate()
+						pop.operator = "+"
+						pop.amount = forest_nice
+						pop.mod = Color.DODGER_BLUE
+						sub_viewport_container.add_child(pop)
+						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+						await get_tree().create_timer(0.4).timeout
+						nice_score += forest_nice
+						total_score = nice_score * exciting_score
+					
+					if forest_exciting:
+						var pop = POP_UP.instantiate()
+						pop.operator = "+"
+						pop.amount = forest_exciting
+						pop.mod = Color.LIGHT_CORAL
+						sub_viewport_container.add_child(pop)
+						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+						await get_tree().create_timer(0.4).timeout
+						exciting_score += forest_exciting
+						total_score = nice_score * exciting_score
