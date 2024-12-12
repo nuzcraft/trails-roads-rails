@@ -46,6 +46,7 @@ func _on_gui_input(event: InputEvent) -> void:
 				switch_state(STATE.FOLLOWING)
 			MOUSE_BUTTON_RIGHT:
 				switch_state(STATE.STATIC)
+		wiggle()
 	elif event is InputEventMouseButton and not event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
@@ -71,3 +72,25 @@ func switch_state(state: int) -> void:
 
 func on_static_tween_finished():
 	card_returned_to_hand.emit(self)
+	
+func wiggle() -> void:
+	randomize()
+	var deg: float = randf_range(10.0, 15.0)
+	var dur: float = randf_range(0.05, 0.15)
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property($PanelContainer, 'rotation_degrees', deg, dur)
+	tween.tween_property($PanelContainer, 'rotation_degrees', -deg, dur)
+	tween.tween_property($PanelContainer, 'rotation_degrees', 0, dur)	
+	
+func _on_mouse_entered() -> void:
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, 'scale', Vector2(1.1, 1.1), 0.1)
+	tween.parallel().tween_property($PanelContainer/BorderPanel, 'visible', true, 0.1)
+
+func _on_mouse_exited() -> void:
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, 'scale', Vector2(1.0, 1.0), 0.1)
+	tween.parallel().tween_property($PanelContainer/BorderPanel, 'visible', false, 0.1)
