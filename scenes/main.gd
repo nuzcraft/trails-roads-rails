@@ -31,7 +31,9 @@ var hand_cards: Array[Card]
 var deck_cards: Array[Card]
 var cards_in_play: Dictionary # [Vector2, Card]
 var source: Vector2
+var src_id: int
 var target: Vector2
+var trgt_id: int
 
 var nice_score: int = 1
 var exciting_score: int = 1
@@ -47,10 +49,12 @@ func _ready() -> void:
 	new_game()
 	
 	label.text = "not connected"
+	astar = initialize_astar()
 	var src_target_array: Array[Vector2] = generate_map()
 	source = src_target_array[0]
 	target = src_target_array[1]
-	astar = initialize_astar()
+	src_id = add_point_to_astar(source, ['N', 'S', 'E', 'W'])
+	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -87,32 +91,39 @@ func on_card_returned_to_hand(card: Card) -> void:
 	
 func initialize_astar() -> AStar2D:
 	var astar: AStar2D = AStar2D.new()
-	var current_id: int
-	for cell in tile_map_layer_path.get_used_cells():
-		current_id = astar.get_available_point_id()
-		astar.add_point(current_id, cell)
-		for other_id in astar.get_point_ids():
-			var diff: Vector2 = abs(astar.get_point_position(other_id) - Vector2(cell))
-			if (diff.x == 1 and diff.y == 0) or (diff.x == 0 and diff.y == 1):
-				astar.connect_points(current_id, other_id)
+	#var current_id: int
+	#for cell in tile_map_layer_path.get_used_cells():
+		#current_id = astar.get_available_point_id()
+		#astar.add_point(current_id, cell)
+		#for other_id in astar.get_point_ids():
+			#var diff: Vector2 = abs(astar.get_point_position(other_id) - Vector2(cell))
+			#if (diff.x == 1 and diff.y == 0) or (diff.x == 0 and diff.y == 1):
+				#astar.connect_points(current_id, other_id)
 	return astar
 	
-func add_point_to_astar(cell_pos: Vector2, conn_array: Array[String]) -> void:
+func add_point_to_astar(cell_pos: Vector2, conn_array: Array[String]) -> int:
+	#TODO remove connections when cells are overwritten
 	var current_id: int = astar.get_available_point_id()
 	astar.add_point(current_id, cell_pos)
-	#print(cell_pos)
+	print("current cell is %d at point %d, %d with conns %s" % [current_id, cell_pos.x, cell_pos.y, conn_array])
 	for other_id in astar.get_point_ids():
-		var diff: Vector2 = abs(astar.get_point_position(other_id) - Vector2(cell_pos))
+		var diff: Vector2 = astar.get_point_position(other_id) - Vector2(cell_pos)
+		print("other id %d is %d, %d spaces away" % [other_id, diff.x, diff.y])
 		#print(diff)
 		for conn in conn_array:
-			if conn == "N" and diff == Vector2(0, 1):
+			if conn == "N" and diff == Vector2(0, -1):
 				astar.connect_points(current_id, other_id)
-			elif conn == "S" and diff == Vector2(0, -1):
+				print("connected to the north")
+			elif conn == "S" and diff == Vector2(0, 1):
 				astar.connect_points(current_id, other_id)
-			elif conn == "E" and diff == Vector2(-1, 0):
+				print("connected to the south")
+			elif conn == "E" and diff == Vector2(1, 0):
 				astar.connect_points(current_id, other_id)
-			elif conn == "W" and diff == Vector2(1, 0):
+				print("connected to the east")
+			elif conn == "W" and diff == Vector2(-1, 0):
 				astar.connect_points(current_id, other_id)
+				print("connected to the west")
+	return current_id
 
 func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
 	var src_id = astar.get_closest_point(src)
