@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=13 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -21,6 +21,14 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bhgyl"]
+font_size = 32
+font_color = Color(1, 1, 0.458824, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3gfl8"]
 font_size = 32
@@ -91,11 +99,11 @@ tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAABAAUAAAAAAAg
 tile_set = ExtResource("1_ow657")
 
 [node name="TileMapLayerFeature" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
-tile_map_data = PackedByteArray("AAACAAQAAAAEAAUAAAA=")
+tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAYAAAAMAAUAAAAEAAUAAAAOAAEAAAAEAAUAAAABAAYAAAAEAAUAAAAEAAgAAAAEAAYAAAAFAAgAAAAEAAUAAAAIAAgAAAAEAAUAAAAEAAIAAAAEAAYAAAADAAEAAAAEAAYAAAAPAAEAAAAEAAYAAAAOAAIAAAAEAAUAAAAPAAIAAAAEAAYAAAAPAAMAAAAEAAUAAAANAAYAAAAEAAYAAAAIAAQAAAAEAAUAAAAMAAkAAAAEAAUAAAAMAAgAAAAEAAYAAAA=")
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(-24, -168)
+position = Vector2(1192, 424)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -117,7 +125,7 @@ anchor_right = 0.75
 anchor_bottom = 1.0
 columns = 8
 
-[node name="CenterContainer" type="CenterContainer" parent="Control"]
+[node name="DeckContainer" type="CenterContainer" parent="Control"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.75
@@ -125,14 +133,14 @@ anchor_top = 0.75
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="PanelContainer" type="PanelContainer" parent="Control/CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="Control/DeckContainer"]
 custom_minimum_size = Vector2(96, 144)
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="Control/CenterContainer/PanelContainer"]
+[node name="Panel" type="Panel" parent="Control/DeckContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer/PanelContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/DeckContainer/PanelContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -141,7 +149,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Control/CenterContainer/PanelContainer/Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="Control/DeckContainer/PanelContainer/Panel/VBoxContainer"]
 layout_mode = 2
 text = "text"
 horizontal_alignment = 1
@@ -159,6 +167,26 @@ text = "Trails, Roads,
 & Rails"
 label_settings = SubResource("LabelSettings_alf16")
 horizontal_alignment = 1
+
+[node name="GoalContainer" type="PanelContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/GoalContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GoalLabel" type="Label" parent="Control/VBoxContainer/GoalContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Goal:"
+label_settings = SubResource("LabelSettings_bhgyl")
+horizontal_alignment = 2
+
+[node name="GoalValueLabel" type="Label" parent="Control/VBoxContainer/GoalContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "20"
+label_settings = SubResource("LabelSettings_bhgyl")
 
 [node name="PanelContainer" type="PanelContainer" parent="Control/VBoxContainer"]
 layout_mode = 2
@@ -255,3 +283,11 @@ label_settings = SubResource("LabelSettings_2ixvb")
 layout_mode = 2
 text = "1"
 label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="DiscardDrawButton" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Discard & Draw"
+
+[connection signal="pressed" from="Control/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]

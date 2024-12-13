@@ -69,6 +69,9 @@ func switch_state(state: int) -> void:
 			current_state = state
 		_:
 			current_state = state
+			
+func switch_state_to_static() -> void:
+	switch_state(STATE.STATIC)
 
 func on_static_tween_finished():
 	card_returned_to_hand.emit(self)
@@ -88,9 +91,11 @@ func _on_mouse_entered() -> void:
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, 'scale', Vector2(1.1, 1.1), 0.1)
 	tween.parallel().tween_property($PanelContainer/BorderPanel, 'visible', true, 0.1)
+	z_index += 1
 
 func _on_mouse_exited() -> void:
 	var tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, 'scale', Vector2(1.0, 1.0), 0.1)
 	tween.parallel().tween_property($PanelContainer/BorderPanel, 'visible', false, 0.1)
+	z_index -=1

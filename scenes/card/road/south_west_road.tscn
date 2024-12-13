@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bjh05oqnf0y1k"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_58y0y"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_svkat"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_13xee"]
+atlas = ExtResource("2_svkat")
+region = Rect2(48, 112, 16, 16)
+
+[node name="SouthWestRoad" instance=ExtResource("1_58y0y")]
+card_name = "turn road"
+connection_array = Array[String](["S", "W"])
+nice_score = 3
+forest_exciting_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_13xee")

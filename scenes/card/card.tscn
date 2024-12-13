@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cxvwx7q4ct2qd"]
+[gd_scene load_steps=6 format=3 uid="uid://cxvwx7q4ct2qd"]
 
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_fq3o7"]
 [ext_resource type="Script" path="res://scenes/card/card.gd" id="1_klpha"]
 [ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_rxqnl"]
 
@@ -27,6 +28,7 @@ offset_right = 48.0
 offset_bottom = 48.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme = ExtResource("1_fq3o7")
 script = ExtResource("1_klpha")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

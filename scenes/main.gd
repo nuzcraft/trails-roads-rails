@@ -6,7 +6,7 @@ extends Node
 @onready var tile_map_layer_feature: TileMapLayer = $Control/SubViewportContainer/SubViewport/TileMapLayerFeature
 @onready var label: Label = $Control/SubViewportContainer/SubViewport2/Label
 @onready var hand_container: GridContainer = $Control/HandContainer
-@onready var deck_label: Label = $Control/CenterContainer/PanelContainer/Panel/VBoxContainer/Label
+@onready var deck_label: Label = $Control/DeckContainer/PanelContainer/Panel/VBoxContainer/Label
 @onready var nice_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer/NiceValueLabel
 @onready var exciting_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer/ExcitingValueLabel
 @onready var total_value_label: Label = $Control/VBoxContainer/PanelContainer/HBoxContainer/TotalValueLabel
@@ -15,6 +15,9 @@ extends Node
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
 const HORIZ_ROAD_CARD = preload("res://scenes/card/road/horiz_road_card.tscn")
 const NORTH_EAST_ROAD = preload("res://scenes/card/road/north_east_road.tscn")
+const NORTH_WEST_ROAD = preload("res://scenes/card/road/north_west_road.tscn")
+const SOUTH_EAST_ROAD = preload("res://scenes/card/road/south_east_road.tscn")
+const SOUTH_WEST_ROAD = preload("res://scenes/card/road/south_west_road.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -41,15 +44,7 @@ func _ready() -> void:
 	rng.randomize()
 	sub_viewport_container.stretch_shrink = 3
 	
-	for i in 16:
-		var crd: Card
-		match i % 3:
-			0: crd = VERT_ROAD_CARD.instantiate()
-			1: crd = HORIZ_ROAD_CARD.instantiate()
-			2: crd = NORTH_EAST_ROAD.instantiate()
-		add_card_to_all(crd)
-		add_card_to_deck(crd)
-	draw_cards_to_hand(8)
+	new_game()
 	
 	label.text = "not connected"
 	var src_target_array: Array[Vector2] = generate_map()
@@ -67,10 +62,15 @@ func _process(delta: float) -> void:
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
+	if cell_coord.x < 0 or cell_coord.y < 0 or\
+			cell_coord.x > 15 or cell_coord.y > 9:
+		card.switch_state_to_static()
+		return
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
 	cards_in_play[cell_coord] = card
-	card.get_parent().remove_child(card)
+	hand_cards.remove_at(hand_cards.find(card))
+	hand_container.remove_child(card)
 	if check_astar_path(source, target):
 		label.text = "you win"
 		var path = check_astar_path(source, target)
@@ -151,8 +151,11 @@ func generate_map() -> Array[Vector2]:
 	var flag_array: Array[Vector2] = [GREY_FLAG_ATLAS, GREEN_FLAG_ATLAS,\
 		BLUE_FLAG_ATLAS, RED_FLAG_ATLAS, ORANGE_FLAG_ATLAS]
 	
-	src = Vector2(2, 2)
-	trgt = Vector2(4, 5)
+	src = Vector2(randi_range(6, 10), randi_range(4, 6))
+	trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
+	while src.distance_to(trgt) < 3:
+		src = Vector2(randi_range(6, 10), randi_range(4, 6))
+		trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
 	tile_map_layer_path.clear()
 	tile_map_layer_path.set_cell(src, 0, flag_array.pick_random())
 	tile_map_layer_path.set_cell(trgt, 0, flag_array.pick_random())
@@ -214,3 +217,36 @@ func tally_score(path: Array) -> void:
 						await get_tree().create_timer(0.4).timeout
 						exciting_score += forest_exciting
 						total_score = nice_score * exciting_score
+
+func new_game() -> void:
+	all_cards = []
+	hand_cards = []
+	deck_cards = []
+	cards_in_play = {}
+	for i in 56:
+		var crd: Card
+		match i % 8:
+			0: crd = VERT_ROAD_CARD.instantiate()
+			1: crd = VERT_ROAD_CARD.instantiate()
+			2: crd = HORIZ_ROAD_CARD.instantiate()
+			3: crd = HORIZ_ROAD_CARD.instantiate()
+			4: crd = NORTH_EAST_ROAD.instantiate()
+			5: crd = NORTH_WEST_ROAD.instantiate()
+			6: crd = SOUTH_EAST_ROAD.instantiate()
+			7: crd = SOUTH_WEST_ROAD.instantiate()
+		add_card_to_all(crd)
+		add_card_to_deck(crd)
+	draw_cards_to_hand(8)
+
+func _on_discard_draw_button_pressed() -> void:
+	hand_cards.reverse()
+	for card in hand_cards:
+		var tween = get_tree().create_tween()
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(card, "global_position", $Control/DeckContainer.global_position, 0.5)
+		tween.parallel().tween_property(card, "modulate:a", 0.0, 0.5)
+		await get_tree().create_timer(0.25).timeout
+		hand_container.remove_child(card)
+	hand_cards.clear()
+	draw_cards_to_hand(8)
+		
