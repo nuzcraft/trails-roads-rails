@@ -206,7 +206,7 @@ func tally_score(path: Array) -> void:
 	total_score = 0
 	nice_score = 1
 	exciting_score = 1
-	var combo = 0
+	var combo = 1
 	for i in path.size():
 		if cards_in_play.has(path[i]):
 			#print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
@@ -232,8 +232,12 @@ func tally_score(path: Array) -> void:
 				var card: Card = cards_in_play[path[i]]
 				if prev_card.type == card.type:
 					combo += 1
-				else: combo = 0
+				else: combo = 1
 				print("combo is %d" % combo)
+				var combo_mult = (combo / 3) * card.combo_score
+				print('combo mult is %d' % combo_mult)
+				if combo_mult > 0:
+					await score_popup("exciting", combo_mult, path[i])
 			#if cards_in
 	if total_score >= score_needed:
 		need_points_label.hide()
@@ -250,7 +254,7 @@ func score_popup(type: String, amount: int, pos: Vector2, operator: String = "+"
 		"exciting": pop.mod = KenneyColors.RED
 		_: pop.mod = KenneyColors.GREEN
 	sub_viewport_container.add_child(pop)
-	pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+	pop.position = pos * 16 * 3
 	await get_tree().create_timer(0.4).timeout
 	match type:
 		"nice": nice_score += amount

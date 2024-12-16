@@ -10,6 +10,8 @@ signal card_returned_to_hand(card)
 @export var connection_array: Array[String] = ["N", "S", "E", "W"]
 @export var nice_score: int
 @export var exciting_score: int
+@export var combo_score: int = 1
+
 @export var forest_nice_modifier: int
 @export var forest_exciting_modifier: int
 
