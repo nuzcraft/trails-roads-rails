@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=14 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -24,7 +24,7 @@ shadow_offset = Vector2(3, 3)
 
 [sub_resource type="LabelSettings" id="LabelSettings_bhgyl"]
 font_size = 32
-font_color = Color(1, 1, 0.458824, 1)
+font_color = Color(0.992157, 0.745098, 0.32549, 1)
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 2
@@ -62,6 +62,10 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 shadow_size = 3
 shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_odugr"]
+font_size = 32
+font_color = Color(0.992157, 0.745098, 0.32549, 1)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_ukryv")
@@ -103,7 +107,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(968, 216)
+position = Vector2(1144, 280)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -285,10 +289,23 @@ layout_mode = 2
 text = "1"
 label_settings = SubResource("LabelSettings_2ixvb")
 
-[node name="DiscardDrawButton" type="Button" parent="Control/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="NeedPointsLabel" type="Label" parent="Control/VBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "NEED MORE POINTS"
+label_settings = SubResource("LabelSettings_odugr")
+horizontal_alignment = 1
+
+[node name="DiscardDrawButton" type="Button" parent="Control/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 10
 text = "Discard & Draw"
 
-[connection signal="pressed" from="Control/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]

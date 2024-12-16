@@ -11,6 +11,7 @@ extends Node
 @onready var exciting_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer/ExcitingValueLabel
 @onready var total_value_label: Label = $Control/VBoxContainer/PanelContainer/HBoxContainer/TotalValueLabel
 @onready var goal_value_label: Label = $Control/VBoxContainer/GoalContainer/HBoxContainer/GoalValueLabel
+@onready var need_points_label: Label = $Control/VBoxContainer/VBoxContainer/NeedPointsLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -67,14 +68,16 @@ func _process(delta: float) -> void:
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
 	if cell_coord.x < 0 or cell_coord.y < 0 or\
-			cell_coord.x > 15 or cell_coord.y > 9:
-		card.switch_state_to_static()
+			cell_coord.x > 15 or cell_coord.y > 9 or\
+			cell_coord == source or cell_coord == target:
+		card.switch_state_to_static(true)
 		return
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
 	cards_in_play[cell_coord] = card
 	hand_cards.remove_at(hand_cards.find(card))
 	hand_container.remove_child(card)
+	card.switch_state_to_static()
 	if check_astar_path(source, target):
 		label.text = "you win"
 		var path = check_astar_path(source, target)
@@ -108,48 +111,48 @@ func add_point_to_astar(cell_pos: Vector2, conn_array: Array[String]) -> int:
 			astar.remove_point(id)
 	var current_id: int = astar.get_available_point_id()
 	astar.add_point(current_id, cell_pos)
-	print("current cell is %d at point %d, %d with conns %s" % [current_id, cell_pos.x, cell_pos.y, conn_array])
+	#print("current cell is %d at point %d, %d with conns %s" % [current_id, cell_pos.x, cell_pos.y, conn_array])
 	for other_id in astar.get_point_ids():
 		var other_pos: Vector2 = astar.get_point_position(other_id)
 		var diff: Vector2 = other_pos - cell_pos
 		var other_card: Card
 		if cards_in_play.has(other_pos):
 			other_card = cards_in_play[other_pos]
-		print("other id %d is %d, %d spaces away" % [other_id, diff.x, diff.y])
+		#print("other id %d is %d, %d spaces away" % [other_id, diff.x, diff.y])
 		#print(diff)
 		for conn in conn_array:
 			if conn == "N" and diff == Vector2(0, -1):
 				if other_pos == source or other_pos == target: 
 					astar.connect_points(current_id, other_id)
-					print("connected to the north")
+					#print("connected to the north")
 				elif other_card:
 					if other_card.connection_array.has("S"):
 						astar.connect_points(current_id, other_id)
-						print("connected to the north")
+						#print("connected to the north")
 			elif conn == "S" and diff == Vector2(0, 1):
 				if other_pos == source or other_pos == target: 
 					astar.connect_points(current_id, other_id)
-					print("connected to the south")
+					#print("connected to the south")
 				elif other_card:
 					if other_card.connection_array.has("N"):
 						astar.connect_points(current_id, other_id)
-						print("connected to the south")
+						#print("connected to the south")
 			elif conn == "E" and diff == Vector2(1, 0):
 				if other_pos == source or other_pos == target: 
 					astar.connect_points(current_id, other_id)
-					print("connected to the east")
+					#print("connected to the east")
 				elif other_card:
 					if other_card.connection_array.has("W"):
 						astar.connect_points(current_id, other_id)
-						print("connected to the east")
+						#print("connected to the east")
 			elif conn == "W" and diff == Vector2(-1, 0):
 				if other_pos == source or other_pos == target: 
 					astar.connect_points(current_id, other_id)
-					print("connected to the west")
+					#print("connected to the west")
 				elif other_card:
 					if other_card.connection_array.has("E"):
 						astar.connect_points(current_id, other_id)
-						print("connected to the west")
+						#print("connected to the west")
 	return current_id
 
 func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
@@ -203,31 +206,40 @@ func tally_score(path: Array) -> void:
 	total_score = 0
 	nice_score = 1
 	exciting_score = 1
-	for pos in path:
-		if cards_in_play.has(pos):
+	var combo = 0
+	for i in path.size():
+		if cards_in_play.has(path[i]):
 			#print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
-			var nice = cards_in_play[pos].nice_score
-			var exciting = cards_in_play[pos].exciting_score
-			
+			var nice = cards_in_play[path[i]].nice_score
+			var exciting = cards_in_play[path[i]].exciting_score
 			if nice: 
-				await score_popup("nice", nice, pos)
-			
+				await score_popup("nice", nice, path[i])
 			if exciting:
-				await score_popup("exciting", exciting, pos)
-			
+				await score_popup("exciting", exciting, path[i])
 			# check for forest modifier
 			for cell in tile_map_layer_feature.get_used_cells():
-				if Vector2(cell) == pos and \
+				if Vector2(cell) == path[i] and \
 						FOREST_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell))):
-					var forest_nice = cards_in_play[pos].forest_nice_modifier
-					var forest_exciting = cards_in_play[pos].forest_exciting_modifier
+					var forest_nice = cards_in_play[path[i]].forest_nice_modifier
+					var forest_exciting = cards_in_play[path[i]].forest_exciting_modifier
 					if forest_nice: 
-						await score_popup("nice", forest_nice, pos)
-					
+						await score_popup("nice", forest_nice, path[i])
 					if forest_exciting:
-						await score_popup("exciting", forest_exciting, pos)
+						await score_popup("exciting", forest_exciting, path[i])
+			# check for combo
+			if cards_in_play.has(path[i-1]):
+				var prev_card: Card = cards_in_play[path[i-1]]
+				var card: Card = cards_in_play[path[i]]
+				if prev_card.type == card.type:
+					combo += 1
+				else: combo = 0
+				print("combo is %d" % combo)
+			#if cards_in
 	if total_score >= score_needed:
+		need_points_label.hide()
 		next_level()
+	else:
+		need_points_label.show()
 
 func score_popup(type: String, amount: int, pos: Vector2, operator: String = "+") -> void:
 	var pop = POP_UP.instantiate()

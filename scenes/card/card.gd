@@ -6,6 +6,7 @@ signal card_picked_up(card)
 signal card_returned_to_hand(card)
 
 @export var card_name: String = "single road"
+@export var type: String = "road"
 @export var connection_array: Array[String] = ["N", "S", "E", "W"]
 @export var nice_score: int
 @export var exciting_score: int
@@ -51,7 +52,7 @@ func _on_gui_input(event: InputEvent) -> void:
 			MOUSE_BUTTON_LEFT:
 				switch_state(STATE.FOLLOWING)
 			MOUSE_BUTTON_RIGHT:
-				switch_state(STATE.STATIC)
+				switch_state_to_static(true)
 		wiggle()
 	elif event is InputEventMouseButton and not event.pressed:
 		match event.button_index:
@@ -64,11 +65,7 @@ func _on_gui_input(event: InputEvent) -> void:
 func switch_state(state: int) -> void:
 	match state:
 		STATE.STATIC:
-			var tween = get_tree().create_tween()
-			tween.finished.connect(on_static_tween_finished)
-			tween.set_ease(Tween.EASE_IN_OUT)
-			tween.tween_property(self, "position", return_pos, 0.2)
-			#tween.parallel().tween_property(self, "global_position", return_global_pos, 0.2)
+			modulate.a = 1.0
 			current_state = state
 		STATE.FOLLOWING:
 			card_picked_up.emit(self)
@@ -76,9 +73,13 @@ func switch_state(state: int) -> void:
 		_:
 			current_state = state
 			
-func switch_state_to_static() -> void:
+func switch_state_to_static(twn: bool = false) -> void:
+	if twn:
+		var tween = get_tree().create_tween()
+		tween.finished.connect(on_static_tween_finished)
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(self, "position", return_pos, 0.2)
 	switch_state(STATE.STATIC)
-	modulate.a = 1.0
 
 func on_static_tween_finished():
 	card_returned_to_hand.emit(self)
