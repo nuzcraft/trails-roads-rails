@@ -10,6 +10,7 @@ extends Node
 @onready var nice_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer/NiceValueLabel
 @onready var exciting_value_label: Label = $Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer/ExcitingValueLabel
 @onready var total_value_label: Label = $Control/VBoxContainer/PanelContainer/HBoxContainer/TotalValueLabel
+@onready var goal_value_label: Label = $Control/VBoxContainer/GoalContainer/HBoxContainer/GoalValueLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -38,6 +39,8 @@ var trgt_id: int
 var nice_score: int = 1
 var exciting_score: int = 1
 var total_score: int = 1
+var level: int = 0
+var score_needed: int = 0
 
 var rng := RandomNumberGenerator.new()
 
@@ -46,15 +49,11 @@ func _ready() -> void:
 	rng.randomize()
 	sub_viewport_container.stretch_shrink = 3
 	
-	new_game()
-	
-	label.text = "not connected"
 	astar = initialize_astar()
-	var src_target_array: Array[Vector2] = generate_map()
-	source = src_target_array[0]
-	target = src_target_array[1]
-	src_id = add_point_to_astar(source, ['N', 'S', 'E', 'W'])
-	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
+	
+	new_game()
+	next_level()
+	label.text = "not connected"
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -63,6 +62,7 @@ func _process(delta: float) -> void:
 	nice_value_label.text = str(nice_score)
 	exciting_value_label.text = str(exciting_score)
 	total_value_label.text = str(total_score)
+	goal_value_label.text = str(score_needed)
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
@@ -178,7 +178,7 @@ func draw_cards_to_hand(num: int) -> void:
 			var crd: Card = deck_cards.pop_front()
 			add_card_to_hand(crd)
 	
-func generate_map() -> Array[Vector2]:
+func generate_map(lvl: int) -> Array[Vector2]:
 	var src: Vector2
 	var trgt: Vector2
 	const GREY_FLAG_ATLAS := Vector2(16, 0)
@@ -189,8 +189,8 @@ func generate_map() -> Array[Vector2]:
 	var flag_array: Array[Vector2] = [GREY_FLAG_ATLAS, GREEN_FLAG_ATLAS,\
 		BLUE_FLAG_ATLAS, RED_FLAG_ATLAS, ORANGE_FLAG_ATLAS]
 	
-	src = Vector2(randi_range(6, 10), randi_range(4, 6))
-	trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
+	src = Vector2(randi_range(6, 7), randi_range(4, 6))
+	trgt = Vector2(randi_range(9, 10), randi_range(4, 6))
 	while src.distance_to(trgt) < 3:
 		src = Vector2(randi_range(6, 10), randi_range(4, 6))
 		trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
@@ -200,6 +200,9 @@ func generate_map() -> Array[Vector2]:
 	return [src, trgt]
 	
 func tally_score(path: Array) -> void:
+	total_score = 0
+	nice_score = 1
+	exciting_score = 1
 	for pos in path:
 		if cards_in_play.has(pos):
 			#print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
@@ -207,26 +210,10 @@ func tally_score(path: Array) -> void:
 			var exciting = cards_in_play[pos].exciting_score
 			
 			if nice: 
-				var pop = POP_UP.instantiate()
-				pop.operator = "+"
-				pop.amount = nice
-				pop.mod = KenneyColors.BLUE
-				sub_viewport_container.add_child(pop)
-				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
-				await get_tree().create_timer(0.4).timeout
-				nice_score += nice
-				total_score = nice_score * exciting_score
+				await score_popup("nice", nice, pos)
 			
 			if exciting:
-				var pop = POP_UP.instantiate()
-				pop.operator = "+"
-				pop.amount = exciting
-				pop.mod = KenneyColors.RED
-				sub_viewport_container.add_child(pop)
-				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
-				await get_tree().create_timer(0.4).timeout
-				exciting_score += exciting
-				total_score = nice_score * exciting_score
+				await score_popup("exciting", exciting, pos)
 			
 			# check for forest modifier
 			for cell in tile_map_layer_feature.get_used_cells():
@@ -235,32 +222,32 @@ func tally_score(path: Array) -> void:
 					var forest_nice = cards_in_play[pos].forest_nice_modifier
 					var forest_exciting = cards_in_play[pos].forest_exciting_modifier
 					if forest_nice: 
-						var pop = POP_UP.instantiate()
-						pop.operator = "+"
-						pop.amount = forest_nice
-						pop.mod = KenneyColors.BLUE
-						sub_viewport_container.add_child(pop)
-						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
-						await get_tree().create_timer(0.4).timeout
-						nice_score += forest_nice
-						total_score = nice_score * exciting_score
+						await score_popup("nice", forest_nice, pos)
 					
 					if forest_exciting:
-						var pop = POP_UP.instantiate()
-						pop.operator = "+"
-						pop.amount = forest_exciting
-						pop.mod = KenneyColors.RED
-						sub_viewport_container.add_child(pop)
-						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
-						await get_tree().create_timer(0.4).timeout
-						exciting_score += forest_exciting
-						total_score = nice_score * exciting_score
+						await score_popup("exciting", forest_exciting, pos)
+	if total_score >= score_needed:
+		next_level()
+
+func score_popup(type: String, amount: int, pos: Vector2, operator: String = "+") -> void:
+	var pop = POP_UP.instantiate()
+	pop.operator = operator
+	pop.amount = amount
+	match type:
+		"nice": pop.mod = KenneyColors.BLUE
+		"exciting": pop.mod = KenneyColors.RED
+		_: pop.mod = KenneyColors.GREEN
+	sub_viewport_container.add_child(pop)
+	pop.position = pos * 16 * 3 #+ Vector2(16, -16)
+	await get_tree().create_timer(0.4).timeout
+	match type:
+		"nice": nice_score += amount
+		"exciting": exciting_score += amount
+		_: pass
+	total_score = nice_score * exciting_score
 
 func new_game() -> void:
 	all_cards = []
-	hand_cards = []
-	deck_cards = []
-	cards_in_play = {}
 	for i in 56:
 		var crd: Card
 		match i % 8:
@@ -273,10 +260,31 @@ func new_game() -> void:
 			6: crd = SOUTH_EAST_ROAD.instantiate()
 			7: crd = SOUTH_WEST_ROAD.instantiate()
 		add_card_to_all(crd)
+	
+func next_level() -> void:
+	level += 1
+	score_needed = 20 + 20 * ((level - 1) * 1.5)
+	total_score = 0
+	nice_score = 1
+	exciting_score = 1
+	await discard_all()
+	deck_cards = []
+	cards_in_play = {}
+	for crd in all_cards:
 		add_card_to_deck(crd)
 	draw_cards_to_hand(8)
+	
+	var src_target_array: Array[Vector2] = generate_map(level)
+	source = src_target_array[0]
+	target = src_target_array[1]
+	src_id = add_point_to_astar(source, ['N', 'S', 'E', 'W'])
+	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
 
 func _on_discard_draw_button_pressed() -> void:
+	await discard_all()
+	draw_cards_to_hand(8)
+	
+func discard_all() -> void:
 	hand_cards.reverse()
 	for card in hand_cards:
 		var tween = get_tree().create_tween()
@@ -286,5 +294,4 @@ func _on_discard_draw_button_pressed() -> void:
 		await get_tree().create_timer(0.25).timeout
 		hand_container.remove_child(card)
 	hand_cards.clear()
-	draw_cards_to_hand(8)
 		

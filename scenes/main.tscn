@@ -103,7 +103,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(-104, -56)
+position = Vector2(968, 216)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -112,6 +112,7 @@ size = Vector2i(864, 486)
 render_target_update_mode = 4
 
 [node name="Label" type="Label" parent="Control/SubViewportContainer/SubViewport2"]
+visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 text = "boring text"
