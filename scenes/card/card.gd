@@ -30,6 +30,12 @@ func _ready() -> void:
 	var tex: AtlasTexture = $PanelContainer/VBoxContainer/TextureRect.texture
 	atlas_pos = tex.region.position / 16
 	$PanelContainer/VBoxContainer/Label.text = card_name
+	$PanelContainer/VBoxContainer/HBoxContainer/NiceLabel.text = str(nice_score)
+	if nice_score == 0:
+		$PanelContainer/VBoxContainer/HBoxContainer/NiceLabel.hide()
+	$PanelContainer/VBoxContainer/HBoxContainer/ExcitingLabel.text = str(exciting_score)
+	if exciting_score == 0:
+		$PanelContainer/VBoxContainer/HBoxContainer/ExcitingLabel.hide()
 	
 func _process(delta: float) -> void:
 	match current_state:
@@ -72,6 +78,7 @@ func switch_state(state: int) -> void:
 			
 func switch_state_to_static() -> void:
 	switch_state(STATE.STATIC)
+	modulate.a = 1.0
 
 func on_static_tween_finished():
 	card_returned_to_hand.emit(self)

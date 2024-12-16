@@ -102,27 +102,54 @@ func initialize_astar() -> AStar2D:
 	return astar
 	
 func add_point_to_astar(cell_pos: Vector2, conn_array: Array[String]) -> int:
-	#TODO remove connections when cells are overwritten
+	for id in astar.get_point_ids():
+		if astar.get_point_position(id) == cell_pos:
+			#print('removing old astar point')
+			astar.remove_point(id)
 	var current_id: int = astar.get_available_point_id()
 	astar.add_point(current_id, cell_pos)
 	print("current cell is %d at point %d, %d with conns %s" % [current_id, cell_pos.x, cell_pos.y, conn_array])
 	for other_id in astar.get_point_ids():
-		var diff: Vector2 = astar.get_point_position(other_id) - Vector2(cell_pos)
+		var other_pos: Vector2 = astar.get_point_position(other_id)
+		var diff: Vector2 = other_pos - cell_pos
+		var other_card: Card
+		if cards_in_play.has(other_pos):
+			other_card = cards_in_play[other_pos]
 		print("other id %d is %d, %d spaces away" % [other_id, diff.x, diff.y])
 		#print(diff)
 		for conn in conn_array:
 			if conn == "N" and diff == Vector2(0, -1):
-				astar.connect_points(current_id, other_id)
-				print("connected to the north")
+				if other_pos == source or other_pos == target: 
+					astar.connect_points(current_id, other_id)
+					print("connected to the north")
+				elif other_card:
+					if other_card.connection_array.has("S"):
+						astar.connect_points(current_id, other_id)
+						print("connected to the north")
 			elif conn == "S" and diff == Vector2(0, 1):
-				astar.connect_points(current_id, other_id)
-				print("connected to the south")
+				if other_pos == source or other_pos == target: 
+					astar.connect_points(current_id, other_id)
+					print("connected to the south")
+				elif other_card:
+					if other_card.connection_array.has("N"):
+						astar.connect_points(current_id, other_id)
+						print("connected to the south")
 			elif conn == "E" and diff == Vector2(1, 0):
-				astar.connect_points(current_id, other_id)
-				print("connected to the east")
+				if other_pos == source or other_pos == target: 
+					astar.connect_points(current_id, other_id)
+					print("connected to the east")
+				elif other_card:
+					if other_card.connection_array.has("W"):
+						astar.connect_points(current_id, other_id)
+						print("connected to the east")
 			elif conn == "W" and diff == Vector2(-1, 0):
-				astar.connect_points(current_id, other_id)
-				print("connected to the west")
+				if other_pos == source or other_pos == target: 
+					astar.connect_points(current_id, other_id)
+					print("connected to the west")
+				elif other_card:
+					if other_card.connection_array.has("E"):
+						astar.connect_points(current_id, other_id)
+						print("connected to the west")
 	return current_id
 
 func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
@@ -183,7 +210,7 @@ func tally_score(path: Array) -> void:
 				var pop = POP_UP.instantiate()
 				pop.operator = "+"
 				pop.amount = nice
-				pop.mod = Color.DODGER_BLUE
+				pop.mod = KenneyColors.BLUE
 				sub_viewport_container.add_child(pop)
 				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
 				await get_tree().create_timer(0.4).timeout
@@ -194,7 +221,7 @@ func tally_score(path: Array) -> void:
 				var pop = POP_UP.instantiate()
 				pop.operator = "+"
 				pop.amount = exciting
-				pop.mod = Color.LIGHT_CORAL
+				pop.mod = KenneyColors.RED
 				sub_viewport_container.add_child(pop)
 				pop.position = pos * 16 * 3 #+ Vector2(16, -16)
 				await get_tree().create_timer(0.4).timeout
@@ -211,7 +238,7 @@ func tally_score(path: Array) -> void:
 						var pop = POP_UP.instantiate()
 						pop.operator = "+"
 						pop.amount = forest_nice
-						pop.mod = Color.DODGER_BLUE
+						pop.mod = KenneyColors.BLUE
 						sub_viewport_container.add_child(pop)
 						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
 						await get_tree().create_timer(0.4).timeout
@@ -222,7 +249,7 @@ func tally_score(path: Array) -> void:
 						var pop = POP_UP.instantiate()
 						pop.operator = "+"
 						pop.amount = forest_exciting
-						pop.mod = Color.LIGHT_CORAL
+						pop.mod = KenneyColors.RED
 						sub_viewport_container.add_child(pop)
 						pop.position = pos * 16 * 3 #+ Vector2(16, -16)
 						await get_tree().create_timer(0.4).timeout
