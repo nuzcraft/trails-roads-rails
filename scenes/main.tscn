@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=15 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -18,6 +18,13 @@ shadow_offset = Vector2(2, 2)
 font_size = 48
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rxyuq"]
+font_size = 36
+font_color = Color(0.666667, 0.890196, 0.576471, 1)
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(3, 3)
@@ -107,7 +114,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(728, 184)
+position = Vector2(1016, 296)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -171,6 +178,12 @@ layout_mode = 2
 text = "Trails, Roads,
 & Rails"
 label_settings = SubResource("LabelSettings_alf16")
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Level 1"
+label_settings = SubResource("LabelSettings_rxyuq")
 horizontal_alignment = 1
 
 [node name="GoalContainer" type="PanelContainer" parent="Control/VBoxContainer"]

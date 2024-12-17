@@ -12,6 +12,7 @@ extends Node
 @onready var total_value_label: Label = $Control/VBoxContainer/PanelContainer/HBoxContainer/TotalValueLabel
 @onready var goal_value_label: Label = $Control/VBoxContainer/GoalContainer/HBoxContainer/GoalValueLabel
 @onready var need_points_label: Label = $Control/VBoxContainer/VBoxContainer/NeedPointsLabel
+@onready var level_label: Label = $Control/VBoxContainer/LevelLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -43,6 +44,8 @@ var total_score: int = 1
 var level: int = 0
 var score_needed: int = 0
 
+var shake: float = 0.0
+
 var rng := RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
@@ -64,6 +67,11 @@ func _process(delta: float) -> void:
 	exciting_value_label.text = str(exciting_score)
 	total_value_label.text = str(total_score)
 	goal_value_label.text = str(score_needed)
+	level_label.text = "Level " + str(level)
+	
+	if shake:
+		shake = max(shake - 2.0 * delta, 0)
+		screenshake()
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
@@ -74,6 +82,7 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 		return
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
+	add_screenshake(0.3)
 	cards_in_play[cell_coord] = card
 	hand_cards.remove_at(hand_cards.find(card))
 	hand_container.remove_child(card)
@@ -86,8 +95,7 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 		label.text = "not a path"
 		
 func on_card_picked_up(card: Card) -> void:
-	#card.reparent(self)
-	pass
+	add_screenshake(0.25)
 		
 func on_card_returned_to_hand(card: Card) -> void:
 	hand_container.queue_sort()
@@ -163,9 +171,6 @@ func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
 func add_card_to_hand(card: Card) -> void:
 	hand_cards.append(card)
 	hand_container.add_child(card)
-	card.card_dropped.connect(on_card_dropped)
-	card.card_picked_up.connect(on_card_picked_up)
-	card.card_returned_to_hand.connect(on_card_returned_to_hand)
 	hand_container.queue_sort()
 	
 func add_card_to_deck(card: Card) -> void:
@@ -173,6 +178,9 @@ func add_card_to_deck(card: Card) -> void:
 	
 func add_card_to_all(card: Card) -> void:
 	all_cards.append(card)
+	card.card_dropped.connect(on_card_dropped)
+	card.card_picked_up.connect(on_card_picked_up)
+	card.card_returned_to_hand.connect(on_card_returned_to_hand)
 	
 func draw_cards_to_hand(num: int) -> void:
 	deck_cards.shuffle()
@@ -241,7 +249,7 @@ func tally_score(path: Array) -> void:
 				var combo_mult = (combo / 3) * card.combo_score
 				print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
-					await score_popup("exciting", combo_mult, path[i], dur, "+", true)
+					await score_popup("exciting", combo_mult, path[i] - Vector2(0.5, 0), dur, "+", true)
 	if total_score >= score_needed:
 		need_points_label.hide()
 		next_level()
@@ -260,6 +268,7 @@ func score_popup(type: String, amount: int, pos: Vector2, duration: float, opera
 		_: pop.mod = KenneyColors.GREEN
 	sub_viewport_container.add_child(pop)
 	pop.position = pos * 16 * 3
+	add_screenshake(0.7 - duration)
 	await get_tree().create_timer(duration).timeout
 	match type:
 		"nice": nice_score += amount
@@ -269,7 +278,7 @@ func score_popup(type: String, amount: int, pos: Vector2, duration: float, opera
 
 func new_game() -> void:
 	all_cards = []
-	for i in 56:
+	for i in 32:
 		var crd: Card
 		match i % 8:
 			0: crd = VERT_ROAD_CARD.instantiate()
@@ -283,17 +292,17 @@ func new_game() -> void:
 		add_card_to_all(crd)
 	
 func next_level() -> void:
+	await discard_all()
 	level += 1
 	score_needed = 20 + 20 * ((level - 1) * 1.5)
 	total_score = 0
 	nice_score = 1
 	exciting_score = 1
-	await discard_all()
 	deck_cards = []
 	cards_in_play = {}
 	for crd in all_cards:
 		add_card_to_deck(crd)
-	draw_cards_to_hand(8)
+	draw_cards_to_hand(6)
 	
 	var src_target_array: Array[Vector2] = generate_map(level)
 	source = src_target_array[0]
@@ -303,7 +312,7 @@ func next_level() -> void:
 
 func _on_discard_draw_button_pressed() -> void:
 	await discard_all()
-	draw_cards_to_hand(8)
+	draw_cards_to_hand(6)
 	
 func discard_all() -> void:
 	hand_cards.reverse()
@@ -313,6 +322,18 @@ func discard_all() -> void:
 		tween.tween_property(card, "global_position", $Control/DeckContainer.global_position, 0.5)
 		tween.parallel().tween_property(card, "modulate:a", 0.0, 0.5)
 		await get_tree().create_timer(0.25).timeout
+		add_screenshake(0.25)
 		hand_container.remove_child(card)
 	hand_cards.clear()
+	
+func add_screenshake(amount: float) -> void:
+	shake = min(shake + amount, 1.0)
+	
+func screenshake() -> void: 
+	var decay := 0.8
+	var max_offset := Vector2(20, 20)
+	var power = 2
+	var amount = pow(shake, power)
+	$Control.position.x = max_offset.x * amount * randi_range(-1, 1)
+	$Control.position.y = max_offset.y * amount * randi_range(-1, 1)
 		
