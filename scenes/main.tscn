@@ -114,7 +114,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(1080, 488)
+position = Vector2(888, 440)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
