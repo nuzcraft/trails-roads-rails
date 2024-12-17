@@ -207,15 +207,19 @@ func tally_score(path: Array) -> void:
 	nice_score = 1
 	exciting_score = 1
 	var combo = 1
+	var dur: float = 0.4
 	for i in path.size():
+		if i > 4: dur = 0.3
+		if i > 12: dur = 0.2
+		if i > 24: dur = 0.1
 		if cards_in_play.has(path[i]):
 			#print("%d, %d is worth %d nice points" % [pos.x, pos.y, cards_in_play[pos].nice_score])
 			var nice = cards_in_play[path[i]].nice_score
 			var exciting = cards_in_play[path[i]].exciting_score
 			if nice: 
-				await score_popup("nice", nice, path[i])
+				await score_popup("nice", nice, path[i], dur, "+", false)
 			if exciting:
-				await score_popup("exciting", exciting, path[i])
+				await score_popup("exciting", exciting, path[i], dur, "+", false)
 			# check for forest modifier
 			for cell in tile_map_layer_feature.get_used_cells():
 				if Vector2(cell) == path[i] and \
@@ -223,9 +227,9 @@ func tally_score(path: Array) -> void:
 					var forest_nice = cards_in_play[path[i]].forest_nice_modifier
 					var forest_exciting = cards_in_play[path[i]].forest_exciting_modifier
 					if forest_nice: 
-						await score_popup("nice", forest_nice, path[i])
+						await score_popup("nice", forest_nice, path[i], dur, "+", false)
 					if forest_exciting:
-						await score_popup("exciting", forest_exciting, path[i])
+						await score_popup("exciting", forest_exciting, path[i], dur, "+", false)
 			# check for combo
 			if cards_in_play.has(path[i-1]):
 				var prev_card: Card = cards_in_play[path[i-1]]
@@ -237,25 +241,26 @@ func tally_score(path: Array) -> void:
 				var combo_mult = (combo / 3) * card.combo_score
 				print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
-					await score_popup("exciting", combo_mult, path[i])
-			#if cards_in
+					await score_popup("exciting", combo_mult, path[i], dur, "+", true)
 	if total_score >= score_needed:
 		need_points_label.hide()
 		next_level()
 	else:
 		need_points_label.show()
 
-func score_popup(type: String, amount: int, pos: Vector2, operator: String = "+") -> void:
+func score_popup(type: String, amount: int, pos: Vector2, duration: float, operator: String, combo: bool) -> void:
 	var pop = POP_UP.instantiate()
 	pop.operator = operator
 	pop.amount = amount
+	if combo:
+		pop.combo()
 	match type:
 		"nice": pop.mod = KenneyColors.BLUE
 		"exciting": pop.mod = KenneyColors.RED
 		_: pop.mod = KenneyColors.GREEN
 	sub_viewport_container.add_child(pop)
 	pop.position = pos * 16 * 3
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(duration).timeout
 	match type:
 		"nice": nice_score += amount
 		"exciting": exciting_score += amount
