@@ -1,0 +1,324 @@
+[gd_scene load_steps=15 format=4 uid="uid://c7gdxxf0oydxh"]
+
+[ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
+[ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="2_igm71"]
+[ext_resource type="FontFile" uid="uid://cuorltbqog0vh" path="res://assets/somepx-font/RulerGold.ttf" id="5_olkcq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bfa1"]
+font = ExtResource("5_olkcq")
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.333333)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_alf16"]
+font_size = 48
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rxyuq"]
+font_size = 36
+font_color = Color(0.666667, 0.890196, 0.576471, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bhgyl"]
+font_size = 32
+font_color = Color(0.992157, 0.745098, 0.32549, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3gfl8"]
+font_size = 32
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5tkuq"]
+bg_color = Color(0, 0.603922, 0.862745, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 3
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2ixvb"]
+font_size = 32
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bo3tb"]
+bg_color = Color(0.909804, 0.270588, 0.215686, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 3
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_odugr"]
+font_size = 32
+font_color = Color(0.992157, 0.745098, 0.32549, 1)
+
+[node name="Main" type="Node"]
+script = ExtResource("1_ukryv")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("2_igm71")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.75
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(864, 486)
+render_target_update_mode = 4
+
+[node name="TileMapLayerBase" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
+tile_map_data = PackedByteArray("AAAAAAAAAAACAAAAAAAAAAEAAAABAAAAAAAAAAIAAAACAAAAAAAAAAMAAAACAAAAAAAAAAQAAAACAAAAAAAAAAUAAAABAAAAAAAAAAYAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAoAAAABAAAAAAABAAAAAAACAAAAAAABAAEAAAACAAAAAAABAAIAAAAAAAAAAAABAAMAAAABAAAAAAABAAQAAAACAAAAAAABAAUAAAACAAAAAAABAAYAAAABAAAAAAABAAcAAAACAAAAAAABAAgAAAACAAAAAAABAAkAAAAAAAAAAAABAAoAAAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAABAAAAAAACAAIAAAABAAAAAAACAAMAAAABAAAAAAACAAQAAAABAAAAAAACAAUAAAACAAAAAAACAAYAAAAAAAAAAAACAAcAAAACAAAAAAACAAgAAAACAAAAAAACAAkAAAAAAAAAAAACAAoAAAACAAAAAAADAAAAAAAAAAAAAAADAAEAAAABAAAAAAADAAIAAAABAAAAAAADAAMAAAACAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAADAAYAAAABAAAAAAADAAcAAAAAAAAAAAADAAgAAAABAAAAAAADAAkAAAACAAAAAAADAAoAAAACAAAAAAAEAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAMAAAABAAAAAAAEAAQAAAAAAAAAAAAEAAUAAAAAAAAAAAAEAAYAAAAAAAAAAAAEAAcAAAABAAAAAAAEAAgAAAABAAAAAAAEAAkAAAAAAAAAAAAEAAoAAAABAAAAAAAFAAAAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAIAAAACAAAAAAAFAAMAAAACAAAAAAAFAAQAAAACAAAAAAAFAAUAAAACAAAAAAAFAAYAAAACAAAAAAAFAAcAAAABAAAAAAAFAAgAAAABAAAAAAAFAAkAAAAAAAAAAAAFAAoAAAABAAAAAAAGAAAAAAABAAAAAAAGAAEAAAABAAAAAAAGAAIAAAACAAAAAAAGAAMAAAABAAAAAAAGAAQAAAABAAAAAAAGAAUAAAACAAAAAAAGAAYAAAAAAAAAAAAGAAcAAAACAAAAAAAGAAgAAAACAAAAAAAGAAkAAAAAAAAAAAAGAAoAAAACAAAAAAAHAAAAAAAAAAAAAAAHAAEAAAAAAAAAAAAHAAIAAAABAAAAAAAHAAMAAAABAAAAAAAHAAQAAAABAAAAAAAHAAUAAAABAAAAAAAHAAYAAAACAAAAAAAHAAcAAAABAAAAAAAHAAgAAAABAAAAAAAHAAkAAAACAAAAAAAHAAoAAAAAAAAAAAAIAAAAAAABAAAAAAAIAAEAAAAAAAAAAAAIAAIAAAAAAAAAAAAIAAMAAAABAAAAAAAIAAQAAAAAAAAAAAAIAAUAAAACAAAAAAAIAAYAAAABAAAAAAAIAAcAAAABAAAAAAAIAAgAAAACAAAAAAAIAAkAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAAAAAABAAAAAAAJAAEAAAABAAAAAAAJAAIAAAACAAAAAAAJAAMAAAACAAAAAAAJAAQAAAAAAAAAAAAJAAUAAAACAAAAAAAJAAYAAAACAAAAAAAJAAcAAAAAAAAAAAAJAAgAAAACAAAAAAAJAAkAAAACAAAAAAAJAAoAAAABAAAAAAAKAAAAAAABAAAAAAAKAAEAAAAAAAAAAAAKAAIAAAACAAAAAAAKAAMAAAABAAAAAAAKAAQAAAABAAAAAAAKAAUAAAACAAAAAAAKAAYAAAAAAAAAAAAKAAcAAAACAAAAAAAKAAgAAAACAAAAAAAKAAkAAAABAAAAAAAKAAoAAAACAAAAAAALAAAAAAABAAAAAAALAAEAAAAAAAAAAAALAAIAAAAAAAAAAAALAAMAAAACAAAAAAALAAQAAAABAAAAAAALAAUAAAAAAAAAAAALAAYAAAAAAAAAAAALAAcAAAABAAAAAAALAAgAAAAAAAAAAAALAAkAAAACAAAAAAALAAoAAAACAAAAAAAMAAAAAAAAAAAAAAAMAAEAAAACAAAAAAAMAAIAAAABAAAAAAAMAAMAAAACAAAAAAAMAAQAAAACAAAAAAAMAAUAAAACAAAAAAAMAAYAAAACAAAAAAAMAAcAAAABAAAAAAAMAAgAAAACAAAAAAAMAAkAAAAAAAAAAAAMAAoAAAACAAAAAAANAAAAAAACAAAAAAANAAEAAAABAAAAAAANAAIAAAAAAAAAAAANAAMAAAAAAAAAAAANAAQAAAAAAAAAAAANAAUAAAABAAAAAAANAAYAAAABAAAAAAANAAcAAAACAAAAAAANAAgAAAAAAAAAAAANAAkAAAACAAAAAAANAAoAAAAAAAAAAAAOAAAAAAACAAAAAAAOAAEAAAAAAAAAAAAOAAIAAAACAAAAAAAOAAMAAAABAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAACAAAAAAAOAAYAAAACAAAAAAAOAAcAAAAAAAAAAAAOAAgAAAACAAAAAAAOAAkAAAAAAAAAAAAOAAoAAAACAAAAAAAPAAAAAAACAAAAAAAPAAEAAAABAAAAAAAPAAIAAAABAAAAAAAPAAMAAAAAAAAAAAAPAAQAAAABAAAAAAAPAAUAAAACAAAAAAAPAAYAAAABAAAAAAAPAAcAAAABAAAAAAAPAAgAAAAAAAAAAAAPAAkAAAABAAAAAAAPAAoAAAABAAAAAAAQAAAAAAACAAAAAAAQAAEAAAACAAAAAAAQAAIAAAACAAAAAAAQAAMAAAACAAAAAAAQAAQAAAACAAAAAAAQAAUAAAAAAAAAAAAQAAYAAAABAAAAAAAQAAcAAAAAAAAAAAAQAAgAAAACAAAAAAAQAAkAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAAAAAAAAAAAAAARAAEAAAAAAAAAAAARAAIAAAACAAAAAAARAAMAAAAAAAAAAAARAAQAAAAAAAAAAAARAAUAAAACAAAAAAARAAYAAAABAAAAAAARAAcAAAACAAAAAAARAAgAAAAAAAAAAAARAAkAAAACAAAAAAARAAoAAAAAAAAAAAA=")
+tile_set = ExtResource("1_ow657")
+
+[node name="TileMapLayerPath" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
+tile_map_data = PackedByteArray("AAABAAMAAAAAAAgAAAABAAQAAAAAAAgAAAABAAUAAAAAAAgAAAABAAYAAAAAAAgAAAABAAcAAAAAAAgAAAABAAgAAAABAAkAAAACAAgAAAACAAYAAAADAAgAAAACAAYAAAAEAAgAAAACAAYAAAAFAAgAAAADAAkAAAAFAAcAAAAAAAgAAAAFAAYAAAAAAAgAAAAFAAUAAAAAAAgAAAAFAAQAAAAAAAgAAAAFAAMAAAAAAAgAAAAFAAIAAAABAAcAAAAHAAUAAAABAAkAAAAIAAUAAAADAAcAAAAIAAYAAAAAAAgAAAAIAAcAAAAAAAgAAAAIAAgAAAABAAkAAAAJAAgAAAACAAYAAAAKAAgAAAACAAYAAAALAAgAAAADAAkAAAALAAcAAAAAAAgAAAALAAYAAAAAAAgAAAALAAUAAAAAAAgAAAALAAQAAAAAAAgAAAABAAIAAAAQAAMAAAALAAIAAAAQAAIAAAAGAAIAAAACAAYAAAAHAAIAAAADAAcAAAAHAAMAAAAAAAgAAAAHAAQAAAAAAAgAAAA=")
+tile_set = ExtResource("1_ow657")
+
+[node name="TileMapLayerFeature" type="TileMapLayer" parent="Control/SubViewportContainer/SubViewport"]
+tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAYAAAAMAAUAAAAEAAUAAAAOAAEAAAAEAAUAAAABAAYAAAAEAAUAAAAEAAgAAAAEAAYAAAAFAAgAAAAEAAUAAAAIAAgAAAAEAAUAAAAEAAIAAAAEAAYAAAADAAEAAAAEAAYAAAAPAAEAAAAEAAYAAAAOAAIAAAAEAAUAAAAPAAIAAAAEAAYAAAAPAAMAAAAEAAUAAAANAAYAAAAEAAYAAAAIAAQAAAAEAAUAAAAMAAkAAAAEAAUAAAAMAAgAAAAEAAYAAAA=")
+tile_set = ExtResource("1_ow657")
+
+[node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
+position = Vector2(1016, 296)
+
+[node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(864, 486)
+render_target_update_mode = 4
+
+[node name="Label" type="Label" parent="Control/SubViewportContainer/SubViewport2"]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+text = "boring text"
+label_settings = SubResource("LabelSettings_1bfa1")
+
+[node name="HandContainer" type="GridContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.75
+anchor_right = 0.75
+anchor_bottom = 1.0
+columns = 8
+
+[node name="DeckContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/DeckContainer"]
+custom_minimum_size = Vector2(96, 144)
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="Control/DeckContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/DeckContainer/PanelContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Control/DeckContainer/PanelContainer/Panel/VBoxContainer"]
+layout_mode = 2
+text = "text"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.75
+
+[node name="TitleLabel" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Trails, Roads,
+& Rails"
+label_settings = SubResource("LabelSettings_alf16")
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Level 1"
+label_settings = SubResource("LabelSettings_rxyuq")
+horizontal_alignment = 1
+
+[node name="GoalContainer" type="PanelContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/GoalContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GoalLabel" type="Label" parent="Control/VBoxContainer/GoalContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Goal:"
+label_settings = SubResource("LabelSettings_bhgyl")
+horizontal_alignment = 2
+
+[node name="GoalValueLabel" type="Label" parent="Control/VBoxContainer/GoalContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "20"
+label_settings = SubResource("LabelSettings_bhgyl")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TotalLabel" type="Label" parent="Control/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Total:"
+label_settings = SubResource("LabelSettings_3gfl8")
+horizontal_alignment = 2
+
+[node name="TotalValueLabel" type="Label" parent="Control/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "1"
+label_settings = SubResource("LabelSettings_3gfl8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="NicePanelContainer" type="PanelContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5tkuq")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="NiceLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Nice"
+label_settings = SubResource("LabelSettings_2ixvb")
+horizontal_alignment = 2
+
+[node name="NiceValueLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer/NicePanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_2ixvb")
+horizontal_alignment = 2
+
+[node name="XLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "X"
+label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="ExcitingPanelContainer" type="PanelContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bo3tb")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ExcitingLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Exciting"
+label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="ExcitingValueLabel" type="Label" parent="Control/VBoxContainer/HBoxContainer/MarginContainer2/ExcitingPanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_2ixvb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="NeedPointsLabel" type="Label" parent="Control/VBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "NEED MORE POINTS"
+label_settings = SubResource("LabelSettings_odugr")
+horizontal_alignment = 1
+
+[node name="DiscardDrawButton" type="Button" parent="Control/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Discard & Draw"
+
+[connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]

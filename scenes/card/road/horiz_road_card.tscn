@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://w4pte76sb4pr"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_beag0"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_qdfoh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ruo1k"]
+atlas = ExtResource("2_qdfoh")
+region = Rect2(32, 96, 16, 16)
+
+[node name="HorizRoadCard" instance=ExtResource("1_beag0")]
+card_name = "horizontal road"
+connection_array = Array[String](["E", "W"])
+nice_score = 2
+forest_exciting_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_ruo1k")

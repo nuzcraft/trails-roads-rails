@@ -1,0 +1,110 @@
+[gd_scene load_steps=8 format=3 uid="uid://cxvwx7q4ct2qd"]
+
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_fq3o7"]
+[ext_resource type="Script" path="res://scenes/card/card.gd" id="1_klpha"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_rxqnl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwm5h"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vt1ow"]
+atlas = ExtResource("1_rxqnl")
+region = Rect2(0, 96, 16, 16)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mg8oo"]
+font_size = 32
+font_color = Color(0, 0.776471, 0.956863, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_se3hv"]
+font_size = 32
+font_color = Color(0.909804, 0.270588, 0.215686, 1)
+
+[node name="Card" type="Control"]
+custom_minimum_size = Vector2(96, 144)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 48.0
+offset_bottom = 48.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_fq3o7")
+script = ExtResource("1_klpha")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(48, 72)
+mouse_filter = 1
+
+[node name="Panel" type="Panel" parent="PanelContainer"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="BorderPanel" type="Panel" parent="PanelContainer"]
+visible = false
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_nwm5h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 1
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture = SubResource("AtlasTexture_vt1ow")
+
+[node name="Spacer2" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 1
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+text = "single road"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="NiceLabel" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "0"
+label_settings = SubResource("LabelSettings_mg8oo")
+
+[node name="ExcitingLabel" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "0"
+label_settings = SubResource("LabelSettings_se3hv")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

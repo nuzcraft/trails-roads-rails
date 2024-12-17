@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://coj2b55ftbk5x"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_gefyc"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_sbr8f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a1r10"]
+atlas = ExtResource("2_sbr8f")
+region = Rect2(48, 144, 16, 16)
+
+[node name="NorthWestRoad" instance=ExtResource("1_gefyc")]
+card_name = "turn road"
+connection_array = Array[String](["N", "W"])
+nice_score = 3
+forest_exciting_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_a1r10")
