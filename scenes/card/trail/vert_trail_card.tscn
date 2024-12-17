@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkejk2jb5lixd"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_6nlhi"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_p2k7v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5ueq"]
+atlas = ExtResource("2_p2k7v")
+region = Rect2(0, 208, 16, 16)
+
+[node name="VertTrailCard" instance=ExtResource("1_6nlhi")]
+card_name = "vertical trail"
+type = "trail"
+connection_array = Array[String](["N", "S"])
+nice_score = 1
+forest_nice_modifier = 1
+forest_exciting_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_l5ueq")

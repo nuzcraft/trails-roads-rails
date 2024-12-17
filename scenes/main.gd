@@ -21,6 +21,7 @@ const NORTH_EAST_ROAD = preload("res://scenes/card/road/north_east_road.tscn")
 const NORTH_WEST_ROAD = preload("res://scenes/card/road/north_west_road.tscn")
 const SOUTH_EAST_ROAD = preload("res://scenes/card/road/south_east_road.tscn")
 const SOUTH_WEST_ROAD = preload("res://scenes/card/road/south_west_road.tscn")
+const VERT_TRAIL_CARD = preload("res://scenes/card/trail/vert_trail_card.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -245,9 +246,9 @@ func tally_score(path: Array) -> void:
 				if prev_card.type == card.type:
 					combo += 1
 				else: combo = 1
-				print("combo is %d" % combo)
+				#print("combo is %d" % combo)
 				var combo_mult = (combo / 3) * card.combo_score
-				print('combo mult is %d' % combo_mult)
+				#print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
 					await score_popup("exciting", combo_mult, path[i] - Vector2(0.5, 0), dur, "+", true)
 	if total_score >= score_needed:
@@ -282,7 +283,7 @@ func new_game() -> void:
 		var crd: Card
 		match i % 8:
 			0: crd = VERT_ROAD_CARD.instantiate()
-			1: crd = VERT_ROAD_CARD.instantiate()
+			1: crd = VERT_TRAIL_CARD.instantiate()
 			2: crd = HORIZ_ROAD_CARD.instantiate()
 			3: crd = HORIZ_ROAD_CARD.instantiate()
 			4: crd = NORTH_EAST_ROAD.instantiate()
@@ -324,6 +325,7 @@ func discard_all() -> void:
 		await get_tree().create_timer(0.25).timeout
 		add_screenshake(0.25)
 		hand_container.remove_child(card)
+	if not level == 0: await get_tree().create_timer(0.25).timeout
 	hand_cards.clear()
 	
 func add_screenshake(amount: float) -> void:
