@@ -22,6 +22,11 @@ const NORTH_WEST_ROAD = preload("res://scenes/card/road/north_west_road.tscn")
 const SOUTH_EAST_ROAD = preload("res://scenes/card/road/south_east_road.tscn")
 const SOUTH_WEST_ROAD = preload("res://scenes/card/road/south_west_road.tscn")
 const VERT_TRAIL_CARD = preload("res://scenes/card/trail/vert_trail_card.tscn")
+const HORIZ_TRAIL_CARD = preload("res://scenes/card/trail/horiz_trail_card.tscn")
+const NORTH_EAST_TRAIL = preload("res://scenes/card/trail/north_east_trail.tscn")
+const NORTH_WEST_TRAIL = preload("res://scenes/card/trail/north_west_trail.tscn")
+const SOUTH_EAST_TRAIL = preload("res://scenes/card/trail/south_east_trail.tscn")
+const SOUTH_WEST_TRAIL = preload("res://scenes/card/trail/south_west_trail.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -282,14 +287,14 @@ func new_game() -> void:
 	for i in 32:
 		var crd: Card
 		match i % 8:
-			0: crd = VERT_ROAD_CARD.instantiate()
+			0: crd = VERT_TRAIL_CARD.instantiate()
 			1: crd = VERT_TRAIL_CARD.instantiate()
-			2: crd = HORIZ_ROAD_CARD.instantiate()
-			3: crd = HORIZ_ROAD_CARD.instantiate()
-			4: crd = NORTH_EAST_ROAD.instantiate()
-			5: crd = NORTH_WEST_ROAD.instantiate()
-			6: crd = SOUTH_EAST_ROAD.instantiate()
-			7: crd = SOUTH_WEST_ROAD.instantiate()
+			2: crd = HORIZ_TRAIL_CARD.instantiate()
+			3: crd = HORIZ_TRAIL_CARD.instantiate()
+			4: crd = NORTH_EAST_TRAIL.instantiate()
+			5: crd = NORTH_WEST_TRAIL.instantiate()
+			6: crd = SOUTH_EAST_TRAIL.instantiate()
+			7: crd = SOUTH_WEST_TRAIL.instantiate()
 		add_card_to_all(crd)
 	
 func next_level() -> void:
