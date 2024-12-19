@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://ytcoro7qy30e"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_a4ewa"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_tjxi3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l08dt"]
+atlas = ExtResource("2_tjxi3")
+region = Rect2(64, 208, 16, 16)
+
+[node name="VertRailCard" instance=ExtResource("1_a4ewa")]
+card_name = "vertical rail"
+type = "rail"
+connection_array = Array[String](["N", "S"])
+nice_score = 2
+combo_score = 2
+forest_nice_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_l08dt")

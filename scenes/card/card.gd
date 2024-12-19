@@ -47,6 +47,14 @@ func _process(delta: float) -> void:
 		STATE.FOLLOWING:
 			global_position = round(get_global_mouse_position() - (size / 4))
 			modulate.a = 0.5
+	tooltip_text = "%s" % [card_name]
+	if nice_score: tooltip_text += "\nNICE = +%d" % nice_score
+	if exciting_score: tooltip_text += "\nEXCITING = +%d" % exciting_score
+	if forest_nice_modifier or forest_exciting_modifier: 
+		tooltip_text += "\nForest Modifier:\n"
+		if forest_nice_modifier: tooltip_text += "  NICE = +%d" % forest_nice_modifier
+		if forest_exciting_modifier: tooltip_text += "  EXCITING = +%d" % forest_exciting_modifier
+	if combo_score: tooltip_text += "\nCombo Modifier = %d" % combo_score
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:

@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckj7ou7g4k7c0"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_xxmk8"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_54778"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mthgw"]
+atlas = ExtResource("2_54778")
+region = Rect2(112, 224, 16, 16)
+
+[node name="NorthWestRail" instance=ExtResource("1_xxmk8")]
+card_name = "turn rail"
+type = "rail"
+connection_array = Array[String](["N", "W"])
+nice_score = 3
+combo_score = 2
+forest_nice_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_mthgw")

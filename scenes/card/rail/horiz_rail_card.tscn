@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwnnd3704tycw"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_v01x6"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_abrww"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvft4"]
+atlas = ExtResource("2_abrww")
+region = Rect2(96, 176, 16, 16)
+
+[node name="HorizRailCard" instance=ExtResource("1_v01x6")]
+card_name = "horizontal rail"
+type = "rail"
+connection_array = Array[String](["E", "W"])
+nice_score = 2
+combo_score = 2
+forest_nice_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_cvft4")
