@@ -13,8 +13,11 @@ extends Node
 @onready var goal_value_label: Label = $Control/VBoxContainer/GoalContainer/HBoxContainer/GoalValueLabel
 @onready var need_points_label: Label = $Control/VBoxContainer/VBoxContainer/NeedPointsLabel
 @onready var level_label: Label = $Control/VBoxContainer/LevelLabel
-
+@onready var pause_end_panel: Panel = $Control/PauseEndPanel
 @onready var quit_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton
+@onready var resume_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton
+@onready var try_again_label: Label = $Control/PauseEndPanel/VBoxContainer/TryAgainLabel
+@onready var pause_label: Label = $Control/PauseEndPanel/VBoxContainer/PauseLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -62,6 +65,13 @@ var shake: float = 0.0
 
 var rng := RandomNumberGenerator.new()
 
+enum {
+	PLAYING,
+	PAUSED
+}
+
+var state = PLAYING
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	rng.randomize()
@@ -79,16 +89,28 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
-	nice_value_label.text = str(nice_score)
-	exciting_value_label.text = str(exciting_score)
-	total_value_label.text = str(total_score)
-	goal_value_label.text = str(score_needed)
-	level_label.text = "Level " + str(level)
-	
-	if shake:
-		shake = max(shake - 2.0 * delta, 0)
-		screenshake()
+	match state:
+		PLAYING:
+			deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
+			nice_value_label.text = str(nice_score)
+			exciting_value_label.text = str(exciting_score)
+			total_value_label.text = str(total_score)
+			goal_value_label.text = str(score_needed)
+			level_label.text = "Level " + str(level)
+			
+			if shake:
+				shake = max(shake - 2.0 * delta, 0)
+				screenshake()
+				
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		match state:
+			PLAYING:
+				pause()
+				state = PAUSED
+			PAUSED:
+				unpause()
+				state = PLAYING
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
@@ -379,3 +401,12 @@ func _on_restart_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+	
+func pause() -> void:
+	pause_end_panel.show()
+	pause_label.show()
+	try_again_label.hide()
+	resume_button.show()
+	
+func unpause() -> void:
+	pause_end_panel.hide()

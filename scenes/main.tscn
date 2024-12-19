@@ -126,7 +126,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(840, 360)
+position = Vector2(872, 456)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -334,6 +334,7 @@ size_flags_vertical = 10
 text = "Discard & Draw"
 
 [node name="PauseEndPanel" type="Panel" parent="Control"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -354,13 +355,13 @@ grow_vertical = 2
 alignment = 1
 
 [node name="TryAgainLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Try Again!"
 label_settings = SubResource("LabelSettings_23ddo")
 horizontal_alignment = 1
 
 [node name="PauseLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
-visible = false
 layout_mode = 2
 text = "Paused"
 label_settings = SubResource("LabelSettings_23ddo")
@@ -385,6 +386,11 @@ label_settings = SubResource("LabelSettings_akyoc")
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "resume"
 
 [node name="RestartButton" type="Button" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
