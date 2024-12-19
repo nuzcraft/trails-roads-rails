@@ -21,6 +21,18 @@ const NORTH_EAST_ROAD = preload("res://scenes/card/road/north_east_road.tscn")
 const NORTH_WEST_ROAD = preload("res://scenes/card/road/north_west_road.tscn")
 const SOUTH_EAST_ROAD = preload("res://scenes/card/road/south_east_road.tscn")
 const SOUTH_WEST_ROAD = preload("res://scenes/card/road/south_west_road.tscn")
+const VERT_TRAIL_CARD = preload("res://scenes/card/trail/vert_trail_card.tscn")
+const HORIZ_TRAIL_CARD = preload("res://scenes/card/trail/horiz_trail_card.tscn")
+const NORTH_EAST_TRAIL = preload("res://scenes/card/trail/north_east_trail.tscn")
+const NORTH_WEST_TRAIL = preload("res://scenes/card/trail/north_west_trail.tscn")
+const SOUTH_EAST_TRAIL = preload("res://scenes/card/trail/south_east_trail.tscn")
+const SOUTH_WEST_TRAIL = preload("res://scenes/card/trail/south_west_trail.tscn")
+const VERT_RAIL_CARD = preload("res://scenes/card/rail/vert_rail_card.tscn")
+const HORIZ_RAIL_CARD = preload("res://scenes/card/rail/horiz_rail_card.tscn")
+const NORTH_EAST_RAIL = preload("res://scenes/card/rail/north_east_rail.tscn")
+const NORTH_WEST_RAIL = preload("res://scenes/card/rail/north_west_rail.tscn")
+const SOUTH_EAST_RAIL = preload("res://scenes/card/rail/south_east_rail.tscn")
+const SOUTH_WEST_RAIL = preload("res://scenes/card/rail/south_west_rail.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -245,9 +257,9 @@ func tally_score(path: Array) -> void:
 				if prev_card.type == card.type:
 					combo += 1
 				else: combo = 1
-				print("combo is %d" % combo)
+				#print("combo is %d" % combo)
 				var combo_mult = (combo / 3) * card.combo_score
-				print('combo mult is %d' % combo_mult)
+				#print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
 					await score_popup("exciting", combo_mult, path[i] - Vector2(0.5, 0), dur, "+", true)
 	if total_score >= score_needed:
@@ -278,17 +290,33 @@ func score_popup(type: String, amount: int, pos: Vector2, duration: float, opera
 
 func new_game() -> void:
 	all_cards = []
-	for i in 32:
+	for i in 48:
 		var crd: Card
-		match i % 8:
-			0: crd = VERT_ROAD_CARD.instantiate()
-			1: crd = VERT_ROAD_CARD.instantiate()
-			2: crd = HORIZ_ROAD_CARD.instantiate()
-			3: crd = HORIZ_ROAD_CARD.instantiate()
-			4: crd = NORTH_EAST_ROAD.instantiate()
-			5: crd = NORTH_WEST_ROAD.instantiate()
-			6: crd = SOUTH_EAST_ROAD.instantiate()
-			7: crd = SOUTH_WEST_ROAD.instantiate()
+		match i % 24:
+			0: crd = VERT_TRAIL_CARD.instantiate()
+			1: crd = VERT_TRAIL_CARD.instantiate()
+			2: crd = HORIZ_TRAIL_CARD.instantiate()
+			3: crd = HORIZ_TRAIL_CARD.instantiate()
+			4: crd = NORTH_EAST_TRAIL.instantiate()
+			5: crd = NORTH_WEST_TRAIL.instantiate()
+			6: crd = SOUTH_EAST_TRAIL.instantiate()
+			7: crd = SOUTH_WEST_TRAIL.instantiate()
+			8: crd = VERT_ROAD_CARD.instantiate()
+			9: crd = VERT_ROAD_CARD.instantiate()
+			10: crd = HORIZ_ROAD_CARD.instantiate()
+			11: crd = HORIZ_ROAD_CARD.instantiate()
+			12: crd = NORTH_EAST_ROAD.instantiate()
+			13: crd = NORTH_WEST_ROAD.instantiate()
+			14: crd = SOUTH_EAST_ROAD.instantiate()
+			15: crd = SOUTH_WEST_ROAD.instantiate()
+			16: crd = VERT_RAIL_CARD.instantiate()
+			17: crd = VERT_RAIL_CARD.instantiate()
+			18: crd = HORIZ_RAIL_CARD.instantiate()
+			19: crd = HORIZ_RAIL_CARD.instantiate()
+			20: crd = NORTH_EAST_RAIL.instantiate()
+			21: crd = NORTH_WEST_RAIL.instantiate()
+			22: crd = SOUTH_EAST_RAIL.instantiate()
+			23: crd = SOUTH_WEST_RAIL.instantiate()
 		add_card_to_all(crd)
 	
 func next_level() -> void:
@@ -324,6 +352,7 @@ func discard_all() -> void:
 		await get_tree().create_timer(0.25).timeout
 		add_screenshake(0.25)
 		hand_container.remove_child(card)
+	if not level == 0: await get_tree().create_timer(0.25).timeout
 	hand_cards.clear()
 	
 func add_screenshake(amount: float) -> void:

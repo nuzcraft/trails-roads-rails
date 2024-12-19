@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://lcrm0r1v1yju"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_humvg"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_m6pmo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkcay"]
+atlas = ExtResource("2_m6pmo")
+region = Rect2(16, 192, 16, 16)
+
+[node name="SouthEastTrail" instance=ExtResource("1_humvg")]
+card_name = "turn trail"
+type = "trail"
+connection_array = Array[String](["S", "E"])
+nice_score = 2
+forest_nice_modifier = 1
+forest_exciting_modifier = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_tkcay")
