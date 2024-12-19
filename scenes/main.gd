@@ -14,6 +14,8 @@ extends Node
 @onready var need_points_label: Label = $Control/VBoxContainer/VBoxContainer/NeedPointsLabel
 @onready var level_label: Label = $Control/VBoxContainer/LevelLabel
 
+@onready var quit_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton
+
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
 const HORIZ_ROAD_CARD = preload("res://scenes/card/road/horiz_road_card.tscn")
@@ -70,6 +72,9 @@ func _ready() -> void:
 	new_game()
 	next_level()
 	label.text = "not connected"
+	
+	if OS.has_feature("web"):
+		quit_button.hide()
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -366,3 +371,11 @@ func screenshake() -> void:
 	$Control.position.x = max_offset.x * amount * randi_range(-1, 1)
 	$Control.position.y = max_offset.y * amount * randi_range(-1, 1)
 		
+
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
