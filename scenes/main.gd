@@ -18,6 +18,8 @@ extends Node
 @onready var resume_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton
 @onready var try_again_label: Label = $Control/PauseEndPanel/VBoxContainer/TryAgainLabel
 @onready var pause_label: Label = $Control/PauseEndPanel/VBoxContainer/PauseLabel
+@onready var discard_draw_button: Button = $Control/VBoxContainer/VBoxContainer/DiscardDrawButton
+@onready var high_score_value_label: Label = $Control/PauseEndPanel/VBoxContainer/HBoxContainer/HighScoreValueLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -60,6 +62,7 @@ var exciting_score: int = 1
 var total_score: int = 1
 var level: int = 0
 var score_needed: int = 0
+var high_score: int = 0
 
 var shake: float = 0.0
 
@@ -97,6 +100,7 @@ func _process(delta: float) -> void:
 			total_value_label.text = str(total_score)
 			goal_value_label.text = str(score_needed)
 			level_label.text = "Level " + str(level)
+			high_score_value_label.text = str(high_score)
 			
 			if shake:
 				shake = max(shake - 2.0 * delta, 0)
@@ -289,6 +293,7 @@ func tally_score(path: Array) -> void:
 				#print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
 					await score_popup("exciting", combo_mult, path[i] - Vector2(0.5, 0), dur, "+", true)
+	if total_score > high_score: high_score = total_score
 	if total_score >= score_needed:
 		need_points_label.hide()
 		next_level()
@@ -366,8 +371,17 @@ func next_level() -> void:
 	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
 
 func _on_discard_draw_button_pressed() -> void:
-	await discard_all()
-	draw_cards_to_hand(6)
+	if deck_cards.size() <= 0:
+		game_over()
+	else:
+		await discard_all()
+		draw_cards_to_hand(6)
+	if deck_cards.size() <= 0:
+		discard_draw_button.text = "End Game"
+		discard_draw_button.modulate = KenneyColors.YELLOW
+	else:
+		discard_draw_button.text = "Discard & Draw"
+		discard_draw_button.modulate = Color.WHITE
 	
 func discard_all() -> void:
 	hand_cards.reverse()
@@ -410,3 +424,9 @@ func pause() -> void:
 	
 func unpause() -> void:
 	pause_end_panel.hide()
+	
+func game_over() -> void:
+	pause_end_panel.show()
+	pause_label.hide()
+	try_again_label.show()
+	resume_button.hide()
