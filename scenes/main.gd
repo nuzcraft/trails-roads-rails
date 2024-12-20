@@ -233,6 +233,13 @@ func draw_cards_to_hand(num: int) -> void:
 			add_card_to_hand(crd)
 	
 func generate_map(lvl: int) -> Array[Vector2]:
+	# generate features (forest)
+	tile_map_layer_feature.clear()
+	for x in 18:
+		for y in 10:
+			if randf() <= 0.2 - (lvl * 0.01):
+				tile_map_layer_feature.set_cell(Vector2(x, y), 0, FOREST_ATLAS.pick_random())
+	# generate source/target flags
 	var src: Vector2
 	var trgt: Vector2
 	const GREY_FLAG_ATLAS := Vector2(16, 0)
@@ -243,11 +250,16 @@ func generate_map(lvl: int) -> Array[Vector2]:
 	var flag_array: Array[Vector2] = [GREY_FLAG_ATLAS, GREEN_FLAG_ATLAS,\
 		BLUE_FLAG_ATLAS, RED_FLAG_ATLAS, ORANGE_FLAG_ATLAS]
 	
-	src = Vector2(randi_range(6, 7), randi_range(4, 6))
-	trgt = Vector2(randi_range(9, 10), randi_range(4, 6))
+	var min_x: int = floor(6 - (float(7) / float(12) * (lvl - 1))) # floor(7 - (7/12 * (A3 - 1)))
+	var max_x: int = floor(10 + (float(7) / float(12) * (lvl - 1)))
+	var min_y: int = 4 -lvl/3
+	var max_y: int = 6 + lvl/3
+	
+	src = Vector2(randi_range(min_x, 7), randi_range(min_y, max_y))
+	trgt = Vector2(randi_range(9, max_x), randi_range(min_y, max_y))
 	while src.distance_to(trgt) < 3:
-		src = Vector2(randi_range(6, 10), randi_range(4, 6))
-		trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
+		src = Vector2(randi_range(min_x, 7), randi_range(min_y, max_y))
+		trgt = Vector2(randi_range(9, max_x), randi_range(min_y, max_y))
 	tile_map_layer_path.clear()
 	tile_map_layer_path.set_cell(src, 0, flag_array.pick_random())
 	tile_map_layer_path.set_cell(trgt, 0, flag_array.pick_random())
