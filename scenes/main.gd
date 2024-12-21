@@ -13,6 +13,13 @@ extends Node
 @onready var goal_value_label: Label = $Control/VBoxContainer/GoalContainer/HBoxContainer/GoalValueLabel
 @onready var need_points_label: Label = $Control/VBoxContainer/VBoxContainer/NeedPointsLabel
 @onready var level_label: Label = $Control/VBoxContainer/LevelLabel
+@onready var pause_end_panel: Panel = $Control/PauseEndPanel
+@onready var quit_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton
+@onready var resume_button: Button = $Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton
+@onready var try_again_label: Label = $Control/PauseEndPanel/VBoxContainer/TryAgainLabel
+@onready var pause_label: Label = $Control/PauseEndPanel/VBoxContainer/PauseLabel
+@onready var discard_draw_button: Button = $Control/VBoxContainer/VBoxContainer/DiscardDrawButton
+@onready var high_score_value_label: Label = $Control/PauseEndPanel/VBoxContainer/HBoxContainer/HighScoreValueLabel
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -55,10 +62,18 @@ var exciting_score: int = 1
 var total_score: int = 1
 var level: int = 0
 var score_needed: int = 0
+var high_score: int = 0
 
 var shake: float = 0.0
 
 var rng := RandomNumberGenerator.new()
+
+enum {
+	PLAYING,
+	PAUSED
+}
+
+var state = PLAYING
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -70,20 +85,36 @@ func _ready() -> void:
 	new_game()
 	next_level()
 	label.text = "not connected"
+	
+	if OS.has_feature("web"):
+		quit_button.hide()
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
-	nice_value_label.text = str(nice_score)
-	exciting_value_label.text = str(exciting_score)
-	total_value_label.text = str(total_score)
-	goal_value_label.text = str(score_needed)
-	level_label.text = "Level " + str(level)
-	
-	if shake:
-		shake = max(shake - 2.0 * delta, 0)
-		screenshake()
+	match state:
+		PLAYING:
+			deck_label.text = "%d/%d" % [deck_cards.size(), all_cards.size()]
+			nice_value_label.text = str(nice_score)
+			exciting_value_label.text = str(exciting_score)
+			total_value_label.text = str(total_score)
+			goal_value_label.text = str(score_needed)
+			level_label.text = "Level " + str(level)
+			high_score_value_label.text = str(high_score)
+			
+			if shake:
+				shake = max(shake - 2.0 * delta, 0)
+				screenshake()
+				
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		match state:
+			PLAYING:
+				pause()
+				state = PAUSED
+			PAUSED:
+				unpause()
+				state = PLAYING
 
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
@@ -186,6 +217,7 @@ func add_card_to_hand(card: Card) -> void:
 	hand_container.queue_sort()
 	
 func add_card_to_deck(card: Card) -> void:
+	card.switch_state_to_static()
 	deck_cards.append(card)
 	
 func add_card_to_all(card: Card) -> void:
@@ -202,6 +234,13 @@ func draw_cards_to_hand(num: int) -> void:
 			add_card_to_hand(crd)
 	
 func generate_map(lvl: int) -> Array[Vector2]:
+	# generate features (forest)
+	tile_map_layer_feature.clear()
+	for x in 18:
+		for y in 10:
+			if randf() <= 0.2 - (lvl * 0.01):
+				tile_map_layer_feature.set_cell(Vector2(x, y), 0, FOREST_ATLAS.pick_random())
+	# generate source/target flags
 	var src: Vector2
 	var trgt: Vector2
 	const GREY_FLAG_ATLAS := Vector2(16, 0)
@@ -212,12 +251,19 @@ func generate_map(lvl: int) -> Array[Vector2]:
 	var flag_array: Array[Vector2] = [GREY_FLAG_ATLAS, GREEN_FLAG_ATLAS,\
 		BLUE_FLAG_ATLAS, RED_FLAG_ATLAS, ORANGE_FLAG_ATLAS]
 	
-	src = Vector2(randi_range(6, 7), randi_range(4, 6))
-	trgt = Vector2(randi_range(9, 10), randi_range(4, 6))
+	var min_x: int = floor(6 - (float(7) / float(12) * (lvl - 1))) # floor(7 - (7/12 * (A3 - 1)))
+	var max_x: int = floor(10 + (float(7) / float(12) * (lvl - 1)))
+	var min_y: int = 4 -lvl/3
+	var max_y: int = 6 + lvl/3
+	
+	src = Vector2(randi_range(min_x, 7), randi_range(min_y, max_y))
+	trgt = Vector2(randi_range(9, max_x), randi_range(min_y, max_y))
 	while src.distance_to(trgt) < 3:
-		src = Vector2(randi_range(6, 10), randi_range(4, 6))
-		trgt = Vector2(randi_range(6, 10), randi_range(4, 6))
+		src = Vector2(randi_range(min_x, 7), randi_range(min_y, max_y))
+		trgt = Vector2(randi_range(9, max_x), randi_range(min_y, max_y))
 	tile_map_layer_path.clear()
+	tile_map_layer_feature.set_cell(src)
+	tile_map_layer_feature.set_cell(trgt)
 	tile_map_layer_path.set_cell(src, 0, flag_array.pick_random())
 	tile_map_layer_path.set_cell(trgt, 0, flag_array.pick_random())
 	return [src, trgt]
@@ -262,6 +308,7 @@ func tally_score(path: Array) -> void:
 				#print('combo mult is %d' % combo_mult)
 				if combo_mult > 0:
 					await score_popup("exciting", combo_mult, path[i] - Vector2(0.5, 0), dur, "+", true)
+	if total_score > high_score: high_score = total_score
 	if total_score >= score_needed:
 		need_points_label.hide()
 		next_level()
@@ -339,8 +386,17 @@ func next_level() -> void:
 	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
 
 func _on_discard_draw_button_pressed() -> void:
-	await discard_all()
-	draw_cards_to_hand(6)
+	if deck_cards.size() <= 0:
+		game_over()
+	else:
+		await discard_all()
+		draw_cards_to_hand(6)
+	if deck_cards.size() <= 0:
+		discard_draw_button.text = "End Game"
+		discard_draw_button.modulate = KenneyColors.YELLOW
+	else:
+		discard_draw_button.text = "Discard & Draw"
+		discard_draw_button.modulate = Color.WHITE
 	
 func discard_all() -> void:
 	hand_cards.reverse()
@@ -366,3 +422,30 @@ func screenshake() -> void:
 	$Control.position.x = max_offset.x * amount * randi_range(-1, 1)
 	$Control.position.y = max_offset.y * amount * randi_range(-1, 1)
 		
+
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
+	
+func pause() -> void:
+	pause_end_panel.show()
+	pause_label.show()
+	try_again_label.hide()
+	resume_button.show()
+	
+func unpause() -> void:
+	pause_end_panel.hide()
+	
+func game_over() -> void:
+	pause_end_panel.show()
+	pause_label.hide()
+	try_again_label.show()
+	resume_button.hide()
+
+
+func _on_resume_button_pressed() -> void:
+	unpause()

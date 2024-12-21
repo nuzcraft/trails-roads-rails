@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=17 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -74,6 +74,18 @@ shadow_offset = Vector2(2, 2)
 font_size = 32
 font_color = Color(0.992157, 0.745098, 0.32549, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_23ddo"]
+font_size = 48
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_akyoc"]
+font_size = 32
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
 [node name="Main" type="Node"]
 script = ExtResource("1_ukryv")
 
@@ -114,7 +126,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(184, -136)
+position = Vector2(728, 424)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -321,4 +333,76 @@ size_flags_horizontal = 4
 size_flags_vertical = 10
 text = "Discard & Draw"
 
+[node name="PauseEndPanel" type="Panel" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PauseEndPanel"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -0.5
+offset_right = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TryAgainLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Try Again!"
+label_settings = SubResource("LabelSettings_23ddo")
+horizontal_alignment = 1
+
+[node name="PauseLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+text = "Paused"
+label_settings = SubResource("LabelSettings_23ddo")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="HighScoreLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "High Score:"
+label_settings = SubResource("LabelSettings_akyoc")
+
+[node name="HighScoreValueLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "320"
+label_settings = SubResource("LabelSettings_akyoc")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "resume"
+
+[node name="RestartButton" type="Button" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "restart"
+
+[node name="QuitButton" type="Button" parent="Control/PauseEndPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "quit"
+
 [connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]
+[connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton" to="." method="_on_quit_button_pressed"]
