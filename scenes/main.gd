@@ -217,6 +217,7 @@ func add_card_to_hand(card: Card) -> void:
 	hand_container.queue_sort()
 	
 func add_card_to_deck(card: Card) -> void:
+	card.switch_state_to_static()
 	deck_cards.append(card)
 	
 func add_card_to_all(card: Card) -> void:
@@ -261,6 +262,8 @@ func generate_map(lvl: int) -> Array[Vector2]:
 		src = Vector2(randi_range(min_x, 7), randi_range(min_y, max_y))
 		trgt = Vector2(randi_range(9, max_x), randi_range(min_y, max_y))
 	tile_map_layer_path.clear()
+	tile_map_layer_feature.set_cell(src)
+	tile_map_layer_feature.set_cell(trgt)
 	tile_map_layer_path.set_cell(src, 0, flag_array.pick_random())
 	tile_map_layer_path.set_cell(trgt, 0, flag_array.pick_random())
 	return [src, trgt]
@@ -442,3 +445,7 @@ func game_over() -> void:
 	pause_label.hide()
 	try_again_label.show()
 	resume_button.hide()
+
+
+func _on_resume_button_pressed() -> void:
+	unpause()
