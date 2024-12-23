@@ -126,6 +126,7 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
 	add_point_to_astar(cell_coord, card.connection_array)
 	add_screenshake(0.3)
+	SoundPlayer.play_sound(SoundPlayer.SWITCH_8)
 	cards_in_play[cell_coord] = card
 	hand_cards.remove_at(hand_cards.find(card))
 	hand_container.remove_child(card)
@@ -322,8 +323,12 @@ func score_popup(type: String, amount: int, pos: Vector2, duration: float, opera
 	if combo:
 		pop.combo()
 	match type:
-		"nice": pop.mod = KenneyColors.BLUE
-		"exciting": pop.mod = KenneyColors.RED
+		"nice": 
+			pop.mod = KenneyColors.BLUE
+			SoundPlayer.play_sound(SoundPlayer.JINGLES_PIZZI_04, 70)
+		"exciting": 
+			pop.mod = KenneyColors.RED
+			SoundPlayer.play_sound(SoundPlayer.JINGLES_PIZZI_16, 70)
 		_: pop.mod = KenneyColors.GREEN
 	sub_viewport_container.add_child(pop)
 	pop.position = pos * 16 * 3
@@ -384,12 +389,19 @@ func next_level() -> void:
 	target = src_target_array[1]
 	src_id = add_point_to_astar(source, ['N', 'S', 'E', 'W'])
 	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
+	
+	discard_draw_button.text = "Discard & Draw"
+	discard_draw_button.modulate = Color.WHITE
 
 func _on_discard_draw_button_pressed() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_3)
+	discard_draw_button.disabled = true
 	if deck_cards.size() <= 0:
+		discard_draw_button.disabled = false
 		game_over()
 	else:
 		await discard_all()
+		discard_draw_button.disabled = false
 		draw_cards_to_hand(6)
 	if deck_cards.size() <= 0:
 		discard_draw_button.text = "End Game"
@@ -403,8 +415,9 @@ func discard_all() -> void:
 	for card in hand_cards:
 		var tween = get_tree().create_tween()
 		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(card, "global_position", $Control/DeckContainer.global_position, 0.5)
-		tween.parallel().tween_property(card, "modulate:a", 0.0, 0.5)
+		tween.tween_property(card, "global_position", $Control/DeckContainer.global_position, 0.25)
+		tween.parallel().tween_property(card, "modulate:a", 0.0, 0.25)
+		SoundPlayer.play_sound(SoundPlayer.BOOK_FLIP_3)
 		await get_tree().create_timer(0.25).timeout
 		add_screenshake(0.25)
 		hand_container.remove_child(card)
@@ -449,3 +462,7 @@ func game_over() -> void:
 
 func _on_resume_button_pressed() -> void:
 	unpause()
+
+
+func _on_discard_draw_button_mouse_entered() -> void:
+	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_2)

@@ -126,7 +126,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(792, 360)
+position = Vector2(344, -8)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -402,6 +402,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "quit"
 
+[connection signal="mouse_entered" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_mouse_entered"]
 [connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]
 [connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/RestartButton" to="." method="_on_restart_button_pressed"]
