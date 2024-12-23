@@ -60,7 +60,7 @@ var trgt_id: int
 var nice_score: int = 1
 var exciting_score: int = 1
 var total_score: int = 1
-var level: int = 0
+var level: int = 1
 var score_needed: int = 0
 var high_score: int = 0
 
@@ -119,7 +119,7 @@ func _input(event: InputEvent) -> void:
 func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 	var cell_coord: Vector2 = tile_map_layer_path.local_to_map(tile_map_layer_path.get_local_mouse_position())
 	if cell_coord.x < 0 or cell_coord.y < 0 or\
-			cell_coord.x > 15 or cell_coord.y > 9 or\
+			cell_coord.x > 16 or cell_coord.y > 9 or\
 			cell_coord == source or cell_coord == target:
 		card.switch_state_to_static(true)
 		return
