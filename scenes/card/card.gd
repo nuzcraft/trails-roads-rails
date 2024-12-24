@@ -60,8 +60,10 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
+				SoundPlayer.play_sound(SoundPlayer.MOUSECLICK_1)
 				switch_state(STATE.FOLLOWING)
 			MOUSE_BUTTON_RIGHT:
+				SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
 				switch_state_to_static(true)
 		wiggle()
 	elif event is InputEventMouseButton and not event.pressed:
@@ -71,6 +73,7 @@ func _on_gui_input(event: InputEvent) -> void:
 					card_dropped.emit(self, atlas_pos)
 					switch_state(STATE.FROZEN)
 				#switch_state(STATE.STATIC)
+			#_: SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
 
 func switch_state(state: int) -> void:
 	match state:
@@ -88,7 +91,7 @@ func switch_state_to_static(twn: bool = false) -> void:
 		var tween = get_tree().create_tween()
 		tween.finished.connect(on_static_tween_finished)
 		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(self, "position", return_pos, 0.2)
+		tween.tween_property(self, "global_position", return_pos, 0.2)
 	switch_state(STATE.STATIC)
 
 func on_static_tween_finished():
@@ -105,6 +108,7 @@ func wiggle() -> void:
 	tween.tween_property($PanelContainer, 'rotation_degrees', 0, dur)	
 	
 func _on_mouse_entered() -> void:
+	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_3, 40)
 	var tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, 'scale', Vector2(1.1, 1.1), 0.1)

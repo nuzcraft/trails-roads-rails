@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/image="res://assets/pride-dark-c-side.png"
 config/icon="res://icon.svg"
 
+[autoload]
+
+SoundPlayer="*res://scenes/sound_player.tscn"
+
 [display]
 
 window/stretch/mode="viewport"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=18 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
@@ -86,6 +86,12 @@ shadow_size = 3
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(3, 3)
 
+[sub_resource type="LabelSettings" id="LabelSettings_sge2x"]
+font_size = 32
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
 [node name="Main" type="Node"]
 script = ExtResource("1_ukryv")
 
@@ -126,7 +132,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(792, 360)
+position = Vector2(264, -136)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -402,7 +408,41 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "quit"
 
+[node name="Spacer" type="Control" parent="Control/PauseEndPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="EffectVolumeLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+text = "Effect Volume"
+label_settings = SubResource("LabelSettings_sge2x")
+horizontal_alignment = 1
+
+[node name="EffectVolumeHSlider" type="HSlider" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+value = 100.0
+tick_count = 5
+ticks_on_borders = true
+
+[node name="MusicVolumeLabel" type="Label" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+text = "Music Volume"
+label_settings = SubResource("LabelSettings_sge2x")
+horizontal_alignment = 1
+
+[node name="MusicVolumeHSlider" type="HSlider" parent="Control/PauseEndPanel/VBoxContainer"]
+layout_mode = 2
+value = 100.0
+tick_count = 5
+ticks_on_borders = true
+
+[connection signal="mouse_entered" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_mouse_entered"]
 [connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]
+[connection signal="mouse_entered" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton" to="." method="_on_resume_button_mouse_entered"]
 [connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="mouse_entered" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/RestartButton" to="." method="_on_restart_button_mouse_entered"]
 [connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="mouse_entered" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="Control/PauseEndPanel/VBoxContainer/HBoxContainer2/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="value_changed" from="Control/PauseEndPanel/VBoxContainer/EffectVolumeHSlider" to="." method="_on_effect_volume_h_slider_value_changed"]
+[connection signal="value_changed" from="Control/PauseEndPanel/VBoxContainer/MusicVolumeHSlider" to="." method="_on_music_volume_h_slider_value_changed"]
