@@ -20,6 +20,8 @@ extends Node
 @onready var pause_label: Label = $Control/PauseEndPanel/VBoxContainer/PauseLabel
 @onready var discard_draw_button: Button = $Control/VBoxContainer/VBoxContainer/DiscardDrawButton
 @onready var high_score_value_label: Label = $Control/PauseEndPanel/VBoxContainer/HBoxContainer/HighScoreValueLabel
+@onready var effect_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/EffectVolumeHSlider
+@onready var music_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/MusicVolumeHSlider
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -60,7 +62,7 @@ var trgt_id: int
 var nice_score: int = 1
 var exciting_score: int = 1
 var total_score: int = 1
-var level: int = 1
+var level: int = 0
 var score_needed: int = 0
 var high_score: int = 0
 
@@ -88,6 +90,10 @@ func _ready() -> void:
 	
 	if OS.has_feature("web"):
 		quit_button.hide()
+	
+	effect_volume_h_slider.value = 75
+	music_volume_h_slider.value = 50
+	SoundPlayer.play_music(SoundPlayer.JD_SHERBERT___AMBIENCES_MUSIC_PACK___DESERT_SIROCCO)
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -213,9 +219,22 @@ func check_astar_path(src: Vector2, trgt: Vector2) -> Array:
 	return astar.get_point_path(src_id, trgt_id)
 	
 func add_card_to_hand(card: Card) -> void:
+	card.modulate.a = 0.0
 	hand_cards.append(card)
 	hand_container.add_child(card)
+	var new_global_pos = Vector2(hand_container.size.x / hand_container.columns\
+	 	* (hand_container.get_child_count() - 1), hand_container.global_position.y)
+	card.return_pos = new_global_pos
+	card.global_position = $Control/DeckContainer.global_position
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(card, "global_position", new_global_pos, 0.25)
+	tween.parallel().tween_property(card, "modulate:a", 1.0, 0.25)
+	SoundPlayer.play_sound(SoundPlayer.BOOK_FLIP_3)
+	await get_tree().create_timer(0.25).timeout
+	add_screenshake(0.25)
 	hand_container.queue_sort()
+	
 	
 func add_card_to_deck(card: Card) -> void:
 	card.switch_state_to_static()
@@ -232,7 +251,7 @@ func draw_cards_to_hand(num: int) -> void:
 	for i in num:
 		if not deck_cards.is_empty():
 			var crd: Card = deck_cards.pop_front()
-			add_card_to_hand(crd)
+			await add_card_to_hand(crd)
 	
 func generate_map(lvl: int) -> Array[Vector2]:
 	# generate features (forest)
@@ -312,8 +331,10 @@ func tally_score(path: Array) -> void:
 	if total_score > high_score: high_score = total_score
 	if total_score >= score_needed:
 		need_points_label.hide()
+		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_10)
 		next_level()
 	else:
+		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_11)
 		need_points_label.show()
 
 func score_popup(type: String, amount: int, pos: Vector2, duration: float, operator: String, combo: bool) -> void:
@@ -325,10 +346,10 @@ func score_popup(type: String, amount: int, pos: Vector2, duration: float, opera
 	match type:
 		"nice": 
 			pop.mod = KenneyColors.BLUE
-			SoundPlayer.play_sound(SoundPlayer.JINGLES_PIZZI_04, 70)
+			SoundPlayer.play_sound(SoundPlayer.IMPACT_GLASS_LIGHT_000, 70)
 		"exciting": 
 			pop.mod = KenneyColors.RED
-			SoundPlayer.play_sound(SoundPlayer.JINGLES_PIZZI_16, 70)
+			SoundPlayer.play_sound(SoundPlayer.IMPACT_GLASS_MEDIUM_000, 70)
 		_: pop.mod = KenneyColors.GREEN
 	sub_viewport_container.add_child(pop)
 	pop.position = pos * 16 * 3
@@ -380,15 +401,16 @@ func next_level() -> void:
 	exciting_score = 1
 	deck_cards = []
 	cards_in_play = {}
-	for crd in all_cards:
-		add_card_to_deck(crd)
-	draw_cards_to_hand(6)
 	
 	var src_target_array: Array[Vector2] = generate_map(level)
 	source = src_target_array[0]
 	target = src_target_array[1]
 	src_id = add_point_to_astar(source, ['N', 'S', 'E', 'W'])
 	trgt_id = add_point_to_astar(target, ['N', 'S', 'E', 'W'])
+	
+	for crd in all_cards:
+		add_card_to_deck(crd)
+	await draw_cards_to_hand(6)
 	
 	discard_draw_button.text = "Discard & Draw"
 	discard_draw_button.modulate = Color.WHITE
@@ -401,8 +423,8 @@ func _on_discard_draw_button_pressed() -> void:
 		game_over()
 	else:
 		await discard_all()
+		await draw_cards_to_hand(6)
 		discard_draw_button.disabled = false
-		draw_cards_to_hand(6)
 	if deck_cards.size() <= 0:
 		discard_draw_button.text = "End Game"
 		discard_draw_button.modulate = KenneyColors.YELLOW
@@ -438,22 +460,28 @@ func screenshake() -> void:
 
 
 func _on_restart_button_pressed() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_4)
 	get_tree().reload_current_scene()
 
 
 func _on_quit_button_pressed() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_4)
 	get_tree().quit()
 	
 func pause() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_5)
 	pause_end_panel.show()
 	pause_label.show()
 	try_again_label.hide()
 	resume_button.show()
 	
 func unpause() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_4)
 	pause_end_panel.hide()
 	
 func game_over() -> void:
+	SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_03)
+	SoundPlayer.stop_music()
 	pause_end_panel.show()
 	pause_label.hide()
 	try_again_label.show()
@@ -466,3 +494,25 @@ func _on_resume_button_pressed() -> void:
 
 func _on_discard_draw_button_mouse_entered() -> void:
 	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_2)
+
+
+func _on_effect_volume_h_slider_value_changed(value: float) -> void:
+	var effect_bus = AudioServer.get_bus_index("Effects")
+	AudioServer.set_bus_volume_db(effect_bus, linear_to_db(value / 100.0))
+
+
+func _on_music_volume_h_slider_value_changed(value: float) -> void:
+	var music_bus = AudioServer.get_bus_index("Music")
+	AudioServer.set_bus_volume_db(music_bus, linear_to_db(value / 100.0))
+
+
+func _on_resume_button_mouse_entered() -> void:
+	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_4)
+
+
+func _on_restart_button_mouse_entered() -> void:
+	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_4)
+
+
+func _on_quit_button_mouse_entered() -> void:
+	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_4)

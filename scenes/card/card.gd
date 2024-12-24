@@ -91,7 +91,7 @@ func switch_state_to_static(twn: bool = false) -> void:
 		var tween = get_tree().create_tween()
 		tween.finished.connect(on_static_tween_finished)
 		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(self, "position", return_pos, 0.2)
+		tween.tween_property(self, "global_position", return_pos, 0.2)
 	switch_state(STATE.STATIC)
 
 func on_static_tween_finished():
