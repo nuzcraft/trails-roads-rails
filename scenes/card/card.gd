@@ -21,7 +21,8 @@ var return_pos: Vector2
 enum STATE {
 	STATIC,
 	FOLLOWING,
-	FROZEN
+	FROZEN,
+	SELECTABLE
 }
 
 var current_state: int =  STATE.STATIC
@@ -57,23 +58,24 @@ func _process(delta: float) -> void:
 	if combo_score: tooltip_text += "\nCombo Modifier = %d" % combo_score
 
 func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		match event.button_index:
-			MOUSE_BUTTON_LEFT:
-				SoundPlayer.play_sound(SoundPlayer.MOUSECLICK_1)
-				switch_state(STATE.FOLLOWING)
-			MOUSE_BUTTON_RIGHT:
-				SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
-				switch_state_to_static(true)
-		wiggle()
-	elif event is InputEventMouseButton and not event.pressed:
-		match event.button_index:
-			MOUSE_BUTTON_LEFT:
-				if current_state == STATE.FOLLOWING:
-					card_dropped.emit(self, atlas_pos)
-					switch_state(STATE.FROZEN)
-				#switch_state(STATE.STATIC)
-			#_: SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
+	if not current_state == STATE.SELECTABLE:
+		if event is InputEventMouseButton and event.pressed:
+			match event.button_index:
+				MOUSE_BUTTON_LEFT:
+					SoundPlayer.play_sound(SoundPlayer.MOUSECLICK_1)
+					switch_state(STATE.FOLLOWING)
+				MOUSE_BUTTON_RIGHT:
+					SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
+					switch_state_to_static(true)
+			wiggle()
+		elif event is InputEventMouseButton and not event.pressed:
+			match event.button_index:
+				MOUSE_BUTTON_LEFT:
+					if current_state == STATE.FOLLOWING:
+						card_dropped.emit(self, atlas_pos)
+						switch_state(STATE.FROZEN)
+					#switch_state(STATE.STATIC)
+				#_: SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
 
 func switch_state(state: int) -> void:
 	match state:
@@ -121,3 +123,10 @@ func _on_mouse_exited() -> void:
 	tween.tween_property(self, 'scale', Vector2(1.0, 1.0), 0.1)
 	tween.parallel().tween_property($PanelContainer/BorderPanel, 'visible', false, 0.1)
 	z_index -=1
+
+func select() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_5)
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, 'position', position + Vector2(0, -32), 0.1)
+	tween.parallel().tween_property($PanelContainer/BorderPanel2, 'visible', true, 0.1)

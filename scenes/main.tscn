@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=4 uid="uid://c7gdxxf0oydxh"]
+[gd_scene load_steps=19 format=4 uid="uid://c7gdxxf0oydxh"]
 
 [ext_resource type="TileSet" uid="uid://csb8dcao3si8j" path="res://resources/tiny-battle-tileset.tres" id="1_ow657"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_ukryv"]
 [ext_resource type="PackedScene" uid="uid://7sblqvhw6rhk" path="res://scenes/grid_cursor.tscn" id="2_7h2p8"]
 [ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="2_igm71"]
 [ext_resource type="FontFile" uid="uid://cuorltbqog0vh" path="res://assets/somepx-font/RulerGold.ttf" id="5_olkcq"]
+[ext_resource type="PackedScene" uid="uid://dun3w6hufufbc" path="res://scenes/deck_edit_menu.tscn" id="6_iwrts"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_1bfa1"]
 font = ExtResource("5_olkcq")
@@ -132,7 +133,7 @@ tile_map_data = PackedByteArray("AAAEAAEAAAAEAAUAAAAGAAUAAAAEAAUAAAAGAAkAAAAEAAY
 tile_set = ExtResource("1_ow657")
 
 [node name="GridCursor" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_7h2p8")]
-position = Vector2(264, -136)
+position = Vector2(-24, -152)
 
 [node name="SubViewport2" type="SubViewport" parent="Control/SubViewportContainer"]
 transparent_bg = true
@@ -435,6 +436,10 @@ layout_mode = 2
 value = 100.0
 tick_count = 5
 ticks_on_borders = true
+
+[node name="DeckEditMenu" parent="Control" instance=ExtResource("6_iwrts")]
+visible = false
+layout_mode = 1
 
 [connection signal="mouse_entered" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_mouse_entered"]
 [connection signal="pressed" from="Control/VBoxContainer/VBoxContainer/DiscardDrawButton" to="." method="_on_discard_draw_button_pressed"]

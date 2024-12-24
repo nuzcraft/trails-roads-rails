@@ -22,6 +22,7 @@ extends Node
 @onready var high_score_value_label: Label = $Control/PauseEndPanel/VBoxContainer/HBoxContainer/HighScoreValueLabel
 @onready var effect_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/EffectVolumeHSlider
 @onready var music_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/MusicVolumeHSlider
+@onready var deck_edit_menu: Control = $Control/DeckEditMenu
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -80,6 +81,8 @@ var state = PLAYING
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	rng.randomize()
+	deck_edit_menu.next_level.connect(next_level)
+	
 	sub_viewport_container.stretch_shrink = 3
 	
 	astar = initialize_astar()
@@ -332,7 +335,8 @@ func tally_score(path: Array) -> void:
 	if total_score >= score_needed:
 		need_points_label.hide()
 		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_10)
-		next_level()
+		await discard_all()
+		deck_edit_menu.show()
 	else:
 		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_11)
 		need_points_label.show()
@@ -394,6 +398,7 @@ func new_game() -> void:
 	
 func next_level() -> void:
 	await discard_all()
+	deck_edit_menu.hide()
 	level += 1
 	score_needed = 20 + 20 * ((level - 1) * 1.5)
 	total_score = 0

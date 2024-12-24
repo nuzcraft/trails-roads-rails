@@ -1,8 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://cxvwx7q4ct2qd"]
+[gd_scene load_steps=9 format=3 uid="uid://cxvwx7q4ct2qd"]
 
 [ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_fq3o7"]
 [ext_resource type="Script" path="res://scenes/card/card.gd" id="1_klpha"]
 [ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="1_rxqnl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7lhym"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwm5h"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -10,6 +23,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
+border_color = Color(0.992157, 0.745098, 0.32549, 1)
 border_blend = true
 corner_radius_top_left = 4
 corner_radius_top_right = 4
@@ -54,6 +68,12 @@ layout_mode = 2
 mouse_filter = 1
 
 [node name="BorderPanel" type="Panel" parent="PanelContainer"]
+visible = false
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_7lhym")
+
+[node name="BorderPanel2" type="Panel" parent="PanelContainer"]
 visible = false
 layout_mode = 2
 mouse_filter = 1

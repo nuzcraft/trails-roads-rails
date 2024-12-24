@@ -1,0 +1,103 @@
+[gd_scene load_steps=12 format=3 uid="uid://dun3w6hufufbc"]
+
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_eslsl"]
+[ext_resource type="Script" path="res://scenes/deck_edit_menu.gd" id="2_4r51j"]
+[ext_resource type="PackedScene" uid="uid://cwnnd3704tycw" path="res://scenes/card/rail/horiz_rail_card.tscn" id="3_qdv1o"]
+[ext_resource type="PackedScene" uid="uid://qi8um5he2tll" path="res://scenes/card/rail/north_east_rail.tscn" id="4_qhqgs"]
+[ext_resource type="PackedScene" uid="uid://ckj7ou7g4k7c0" path="res://scenes/card/rail/north_west_rail.tscn" id="5_lf4dt"]
+[ext_resource type="PackedScene" uid="uid://b25uyt72xu5w" path="res://scenes/card/rail/south_east_rail.tscn" id="6_r8kxt"]
+[ext_resource type="PackedScene" uid="uid://svihxn2yi65g" path="res://scenes/card/rail/south_west_rail.tscn" id="7_symt0"]
+[ext_resource type="PackedScene" uid="uid://ytcoro7qy30e" path="res://scenes/card/rail/vert_rail_card.tscn" id="8_0wq35"]
+[ext_resource type="PackedScene" uid="uid://w4pte76sb4pr" path="res://scenes/card/road/horiz_road_card.tscn" id="9_c1hoi"]
+[ext_resource type="PackedScene" uid="uid://ch10stw2cex3h" path="res://scenes/card/road/north_east_road.tscn" id="10_0la6n"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hw160"]
+font_size = 48
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[node name="DeckEditMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_eslsl")
+script = ExtResource("2_4r51j")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.321569, 0.376471, 0.486275, 1)
+
+[node name="ChooseLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+grow_horizontal = 2
+grow_vertical = 2
+text = "choose up to
+~ 2 ~
+tiles"
+label_settings = SubResource("LabelSettings_hw160")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TileGridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.55
+anchor_right = 0.5
+anchor_bottom = 0.55
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 4
+
+[node name="HorizRailCard" parent="TileGridContainer" instance=ExtResource("3_qdv1o")]
+layout_mode = 2
+
+[node name="NorthEastRail" parent="TileGridContainer" instance=ExtResource("4_qhqgs")]
+layout_mode = 2
+
+[node name="NorthWestRail" parent="TileGridContainer" instance=ExtResource("5_lf4dt")]
+layout_mode = 2
+
+[node name="SouthEastRail" parent="TileGridContainer" instance=ExtResource("6_r8kxt")]
+layout_mode = 2
+
+[node name="SouthWestRail" parent="TileGridContainer" instance=ExtResource("7_symt0")]
+layout_mode = 2
+
+[node name="VertRailCard" parent="TileGridContainer" instance=ExtResource("8_0wq35")]
+layout_mode = 2
+
+[node name="HorizRoadCard" parent="TileGridContainer" instance=ExtResource("9_c1hoi")]
+layout_mode = 2
+
+[node name="NorthEastRoad" parent="TileGridContainer" instance=ExtResource("10_0la6n")]
+layout_mode = 2
+
+[node name="NextLevelButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.9
+anchor_right = 0.5
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+text = "Next Level"
+
+[connection signal="pressed" from="NextLevelButton" to="." method="_on_next_level_button_pressed"]
