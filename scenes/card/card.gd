@@ -4,6 +4,8 @@ class_name Card
 signal card_dropped(card, atlas_position)
 signal card_picked_up(card)
 signal card_returned_to_hand(card)
+signal card_selected(card)
+signal card_unselected(card)
 
 @export var card_name: String = "single road"
 @export var type: String = "road"
@@ -27,6 +29,7 @@ enum STATE {
 
 var current_state: int =  STATE.STATIC
 var atlas_pos: Vector2
+var selected: bool = false
 
 func _ready() -> void:
 	return_pos = position
@@ -76,6 +79,11 @@ func _on_gui_input(event: InputEvent) -> void:
 						switch_state(STATE.FROZEN)
 					#switch_state(STATE.STATIC)
 				#_: SoundPlayer.play_sound(SoundPlayer.MOUSERELEASE_1)
+	elif current_state == STATE.SELECTABLE:
+		if event is InputEventMouseButton and event.pressed:
+			if not selected: select()
+			else: unselect()
+		
 
 func switch_state(state: int) -> void:
 	match state:
@@ -89,12 +97,16 @@ func switch_state(state: int) -> void:
 			current_state = state
 			
 func switch_state_to_static(twn: bool = false) -> void:
+	if selected: unselect()
 	if twn:
 		var tween = get_tree().create_tween()
 		tween.finished.connect(on_static_tween_finished)
 		tween.set_ease(Tween.EASE_IN_OUT)
 		tween.tween_property(self, "global_position", return_pos, 0.2)
 	switch_state(STATE.STATIC)
+	
+func switch_state_to_selectable() -> void:
+	switch_state(STATE.SELECTABLE)
 
 func on_static_tween_finished():
 	card_returned_to_hand.emit(self)
@@ -126,7 +138,20 @@ func _on_mouse_exited() -> void:
 
 func select() -> void:
 	SoundPlayer.play_sound(SoundPlayer.CLICK_5)
+	selected = true
 	var tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, 'position', position + Vector2(0, -32), 0.1)
 	tween.parallel().tween_property($PanelContainer/BorderPanel2, 'visible', true, 0.1)
+	await tween 
+	card_selected.emit(self)
+	
+func unselect() -> void:
+	SoundPlayer.play_sound(SoundPlayer.CLICK_5)
+	selected = false
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, 'position', position + Vector2(0, +32), 0.1)
+	tween.parallel().tween_property($PanelContainer/BorderPanel2, 'visible', false, 0.1)
+	await tween
+	card_unselected.emit(self)

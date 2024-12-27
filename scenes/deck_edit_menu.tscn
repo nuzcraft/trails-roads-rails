@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dun3w6hufufbc"]
+[gd_scene load_steps=10 format=3 uid="uid://dun3w6hufufbc"]
 
 [ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_eslsl"]
 [ext_resource type="Script" path="res://scenes/deck_edit_menu.gd" id="2_4r51j"]
@@ -6,13 +6,23 @@
 [ext_resource type="PackedScene" uid="uid://qi8um5he2tll" path="res://scenes/card/rail/north_east_rail.tscn" id="4_qhqgs"]
 [ext_resource type="PackedScene" uid="uid://ckj7ou7g4k7c0" path="res://scenes/card/rail/north_west_rail.tscn" id="5_lf4dt"]
 [ext_resource type="PackedScene" uid="uid://b25uyt72xu5w" path="res://scenes/card/rail/south_east_rail.tscn" id="6_r8kxt"]
-[ext_resource type="PackedScene" uid="uid://svihxn2yi65g" path="res://scenes/card/rail/south_west_rail.tscn" id="7_symt0"]
-[ext_resource type="PackedScene" uid="uid://ytcoro7qy30e" path="res://scenes/card/rail/vert_rail_card.tscn" id="8_0wq35"]
-[ext_resource type="PackedScene" uid="uid://w4pte76sb4pr" path="res://scenes/card/road/horiz_road_card.tscn" id="9_c1hoi"]
-[ext_resource type="PackedScene" uid="uid://ch10stw2cex3h" path="res://scenes/card/road/north_east_road.tscn" id="10_0la6n"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hw160"]
 font_size = 48
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycef6"]
+font_size = 32
+font_color = Color(0.909804, 0.270588, 0.215686, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xhyuw"]
+font_size = 32
+font_color = Color(0.666667, 0.890196, 0.576471, 1)
 shadow_size = 3
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(3, 3)
@@ -47,46 +57,89 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "choose up to
 ~ 2 ~
-tiles"
+more tiles"
 label_settings = SubResource("LabelSettings_hw160")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TileGridContainer" type="GridContainer" parent="."]
+[node name="DeletePanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(0.909804, 0.270588, 0.215686, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.55
+anchor_top = 0.4
 anchor_right = 0.5
-anchor_bottom = 0.55
+anchor_bottom = 0.45
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/h_separation = 32
-theme_override_constants/v_separation = 32
-columns = 4
 
-[node name="HorizRailCard" parent="TileGridContainer" instance=ExtResource("3_qdv1o")]
+[node name="MarginContainer" type="MarginContainer" parent="DeletePanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="DeleteTileGridContainer" type="HBoxContainer" parent="DeletePanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="RemoveLabel" type="Label" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer"]
+layout_mode = 2
+text = "REMOVE"
+label_settings = SubResource("LabelSettings_ycef6")
+
+[node name="HorizRailCard" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("3_qdv1o")]
 layout_mode = 2
 
-[node name="NorthEastRail" parent="TileGridContainer" instance=ExtResource("4_qhqgs")]
+[node name="NorthEastRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("4_qhqgs")]
 layout_mode = 2
 
-[node name="NorthWestRail" parent="TileGridContainer" instance=ExtResource("5_lf4dt")]
+[node name="NorthWestRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("5_lf4dt")]
 layout_mode = 2
 
-[node name="SouthEastRail" parent="TileGridContainer" instance=ExtResource("6_r8kxt")]
+[node name="SouthEastRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("6_r8kxt")]
 layout_mode = 2
 
-[node name="SouthWestRail" parent="TileGridContainer" instance=ExtResource("7_symt0")]
+[node name="AddPanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(0.666667, 0.890196, 0.576471, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.7
+anchor_right = 0.5
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="AddPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="AddTileGridContainer" type="HBoxContainer" parent="AddPanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="AddLabel" type="Label" parent="AddPanelContainer/MarginContainer/AddTileGridContainer"]
+layout_mode = 2
+text = "ADD"
+label_settings = SubResource("LabelSettings_xhyuw")
+
+[node name="HorizRailCard" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("3_qdv1o")]
 layout_mode = 2
 
-[node name="VertRailCard" parent="TileGridContainer" instance=ExtResource("8_0wq35")]
+[node name="NorthEastRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("4_qhqgs")]
 layout_mode = 2
 
-[node name="HorizRoadCard" parent="TileGridContainer" instance=ExtResource("9_c1hoi")]
+[node name="NorthWestRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("5_lf4dt")]
 layout_mode = 2
 
-[node name="NorthEastRoad" parent="TileGridContainer" instance=ExtResource("10_0la6n")]
+[node name="SouthEastRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("6_r8kxt")]
 layout_mode = 2
 
 [node name="NextLevelButton" type="Button" parent="."]
