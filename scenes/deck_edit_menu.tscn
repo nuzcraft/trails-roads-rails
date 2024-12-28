@@ -1,11 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://dun3w6hufufbc"]
+[gd_scene load_steps=6 format=3 uid="uid://dun3w6hufufbc"]
 
 [ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_eslsl"]
 [ext_resource type="Script" path="res://scenes/deck_edit_menu.gd" id="2_4r51j"]
-[ext_resource type="PackedScene" uid="uid://cwnnd3704tycw" path="res://scenes/card/rail/horiz_rail_card.tscn" id="3_qdv1o"]
-[ext_resource type="PackedScene" uid="uid://qi8um5he2tll" path="res://scenes/card/rail/north_east_rail.tscn" id="4_qhqgs"]
-[ext_resource type="PackedScene" uid="uid://ckj7ou7g4k7c0" path="res://scenes/card/rail/north_west_rail.tscn" id="5_lf4dt"]
-[ext_resource type="PackedScene" uid="uid://b25uyt72xu5w" path="res://scenes/card/rail/south_east_rail.tscn" id="6_r8kxt"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hw160"]
 font_size = 48
@@ -90,18 +86,6 @@ layout_mode = 2
 text = "REMOVE"
 label_settings = SubResource("LabelSettings_ycef6")
 
-[node name="HorizRailCard" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("3_qdv1o")]
-layout_mode = 2
-
-[node name="NorthEastRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("4_qhqgs")]
-layout_mode = 2
-
-[node name="NorthWestRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("5_lf4dt")]
-layout_mode = 2
-
-[node name="SouthEastRail" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer" instance=ExtResource("6_r8kxt")]
-layout_mode = 2
-
 [node name="AddPanelContainer" type="PanelContainer" parent="."]
 self_modulate = Color(0.666667, 0.890196, 0.576471, 1)
 layout_mode = 1
@@ -129,18 +113,6 @@ alignment = 1
 layout_mode = 2
 text = "ADD"
 label_settings = SubResource("LabelSettings_xhyuw")
-
-[node name="HorizRailCard" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("3_qdv1o")]
-layout_mode = 2
-
-[node name="NorthEastRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("4_qhqgs")]
-layout_mode = 2
-
-[node name="NorthWestRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("5_lf4dt")]
-layout_mode = 2
-
-[node name="SouthEastRail" parent="AddPanelContainer/MarginContainer/AddTileGridContainer" instance=ExtResource("6_r8kxt")]
-layout_mode = 2
 
 [node name="NextLevelButton" type="Button" parent="."]
 layout_mode = 1

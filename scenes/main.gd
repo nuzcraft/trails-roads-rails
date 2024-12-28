@@ -22,7 +22,6 @@ extends Node
 @onready var high_score_value_label: Label = $Control/PauseEndPanel/VBoxContainer/HBoxContainer/HighScoreValueLabel
 @onready var effect_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/EffectVolumeHSlider
 @onready var music_volume_h_slider: HSlider = $Control/PauseEndPanel/VBoxContainer/MusicVolumeHSlider
-@onready var deck_edit_menu: Control = $Control/DeckEditMenu
 
 # card types
 const VERT_ROAD_CARD = preload("res://scenes/card/road/vert_road_card.tscn")
@@ -46,6 +45,7 @@ const SOUTH_WEST_RAIL = preload("res://scenes/card/rail/south_west_rail.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
+const DECK_EDIT_MENU = preload("res://scenes/deck_edit_menu.tscn")
 
 # feature atlas position
 const FOREST_ATLAS: Array[Vector2] = [Vector2(4, 5), Vector2(4, 6)]
@@ -81,14 +81,13 @@ var state = PLAYING
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	rng.randomize()
-	deck_edit_menu.next_level.connect(next_level)
 	
 	sub_viewport_container.stretch_shrink = 3
 	
 	astar = initialize_astar()
 	
 	new_game()
-	next_level()
+	next_level([])
 	label.text = "not connected"
 	
 	if OS.has_feature("web"):
@@ -336,7 +335,7 @@ func tally_score(path: Array) -> void:
 		need_points_label.hide()
 		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_10)
 		await discard_all()
-		deck_edit_menu.show()
+		create_deck_edit_menu()
 	else:
 		SoundPlayer.play_sound(SoundPlayer.JINGLES_SAX_11)
 		need_points_label.show()
@@ -396,9 +395,18 @@ func new_game() -> void:
 			23: crd = SOUTH_WEST_RAIL.instantiate()
 		add_card_to_all(crd)
 	
-func next_level() -> void:
+func next_level(cards_to_add: Array[Card]) -> void:
+	var deck_edit_screen = get_node("DeckEditMenu")
+	for crd in cards_to_add:
+		crd.get_parent().remove_child(crd)
+		add_card_to_all(crd)
+	if deck_edit_screen:
+		var tween = get_tree().create_tween()
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(deck_edit_screen, "modulate:a", 0, 0.2)
+		tween.tween_callback(deck_edit_screen.queue_free)
+		await tween
 	await discard_all()
-	deck_edit_menu.hide()
 	level += 1
 	score_needed = 20 + 20 * ((level - 1) * 1.5)
 	total_score = 0
@@ -521,3 +529,21 @@ func _on_restart_button_mouse_entered() -> void:
 
 func _on_quit_button_mouse_entered() -> void:
 	SoundPlayer.play_sound(SoundPlayer.ROLLOVER_4)
+	
+func create_deck_edit_menu():
+	var deck_edit_menu = DECK_EDIT_MENU.instantiate()
+	deck_edit_menu.modulate.a = 0
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(deck_edit_menu, "modulate:a", 1.0, 0.5)
+	add_child(deck_edit_menu)
+	deck_edit_menu.next_level.connect(next_level)
+	all_cards.shuffle()
+	var arr = [VERT_RAIL_CARD, VERT_ROAD_CARD, VERT_TRAIL_CARD, \
+			HORIZ_RAIL_CARD, HORIZ_ROAD_CARD, HORIZ_TRAIL_CARD]
+	for i in 4:
+		var crd = all_cards.pop_front()
+		deck_edit_menu.add_card_to_delete_list(crd)
+		var crd2 = arr.pick_random().instantiate()
+		deck_edit_menu.add_card_to_add_list(crd2)
+	

@@ -149,9 +149,10 @@ func select() -> void:
 func unselect() -> void:
 	SoundPlayer.play_sound(SoundPlayer.CLICK_5)
 	selected = false
-	var tween = get_tree().create_tween()
-	tween.set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, 'position', position + Vector2(0, +32), 0.1)
-	tween.parallel().tween_property($PanelContainer/BorderPanel2, 'visible', false, 0.1)
-	await tween
+	if get_parent():
+		var tween = get_tree().create_tween()
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(self, 'position', position + Vector2(0, +32), 0.1)
+		tween.parallel().tween_property($PanelContainer/BorderPanel2, 'visible', false, 0.1)
+		await tween
 	card_unselected.emit(self)
