@@ -9,6 +9,7 @@ signal card_unselected(card)
 
 @export var card_name: String = "single road"
 @export var type: String = "road"
+@export var custom_tooltip_text: String = ""
 @export var connection_array: Array[String] = ["N", "S", "E", "W"]
 @export var nice_score: int
 @export var exciting_score: int
@@ -52,6 +53,7 @@ func _process(delta: float) -> void:
 			global_position = round(get_global_mouse_position() - (size / 4))
 			modulate.a = 0.5
 	tooltip_text = "%s" % [card_name]
+	if custom_tooltip_text: tooltip_text += "\n%s" % custom_tooltip_text
 	if nice_score: tooltip_text += "\nNICE = +%d" % nice_score
 	if exciting_score: tooltip_text += "\nEXCITING = +%d" % exciting_score
 	if forest_nice_modifier or forest_exciting_modifier: 

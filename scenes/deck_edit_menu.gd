@@ -86,10 +86,12 @@ func add_card_to_delete_list(card: Card) -> void:
 	delete_tile_grid_container.add_child(card)
 	card.card_selected.connect(_on_card_selected)
 	card.card_unselected.connect(_on_card_unselected)
+	card.modulate.a = 1.0
 	card.switch_state_to_selectable()
 	
 func add_card_to_add_list(card: Card) -> void:
 	add_tile_grid_container.add_child(card)
 	card.card_selected.connect(_on_card_selected)
 	card.card_unselected.connect(_on_card_unselected)
+	card.modulate.a = 1.0
 	card.switch_state_to_selectable()

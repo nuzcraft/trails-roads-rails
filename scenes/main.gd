@@ -42,6 +42,8 @@ const NORTH_EAST_RAIL = preload("res://scenes/card/rail/north_east_rail.tscn")
 const NORTH_WEST_RAIL = preload("res://scenes/card/rail/north_west_rail.tscn")
 const SOUTH_EAST_RAIL = preload("res://scenes/card/rail/south_east_rail.tscn")
 const SOUTH_WEST_RAIL = preload("res://scenes/card/rail/south_west_rail.tscn")
+# feature cards
+const FOREST = preload("res://scenes/card/feature_card/forest.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -131,11 +133,15 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 			cell_coord == source or cell_coord == target:
 		card.switch_state_to_static(true)
 		return
-	tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
-	add_point_to_astar(cell_coord, card.connection_array)
+	match card.type:
+		"feature":
+			tile_map_layer_feature.set_cell(cell_coord, 0, atlas_position)
+		_:
+			tile_map_layer_path.set_cell(cell_coord, 0, atlas_position)
+			add_point_to_astar(cell_coord, card.connection_array)
+			cards_in_play[cell_coord] = card
 	add_screenshake(0.3)
 	SoundPlayer.play_sound(SoundPlayer.SWITCH_8)
-	cards_in_play[cell_coord] = card
 	hand_cards.remove_at(hand_cards.find(card))
 	hand_container.remove_child(card)
 	card.switch_state_to_static()
@@ -539,8 +545,9 @@ func create_deck_edit_menu():
 	add_child(deck_edit_menu)
 	deck_edit_menu.next_level.connect(next_level)
 	all_cards.shuffle()
-	var arr = [VERT_RAIL_CARD, VERT_ROAD_CARD, VERT_TRAIL_CARD, \
-			HORIZ_RAIL_CARD, HORIZ_ROAD_CARD, HORIZ_TRAIL_CARD]
+	#var arr = [VERT_RAIL_CARD, VERT_ROAD_CARD, VERT_TRAIL_CARD, \
+			#HORIZ_RAIL_CARD, HORIZ_ROAD_CARD, HORIZ_TRAIL_CARD]
+	var arr = [FOREST]
 	for i in 4:
 		var crd = all_cards.pop_front()
 		deck_edit_menu.add_card_to_delete_list(crd)
