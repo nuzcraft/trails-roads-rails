@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://wwvuid212bmq"]
+
+[ext_resource type="PackedScene" uid="uid://dpdnyhu2y85pc" path="res://scenes/card/feature_card/feature_card.tscn" id="1_u7tqy"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_puj3q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_civdk"]
+atlas = ExtResource("2_puj3q")
+region = Rect2(16, 32, 16, 16)
+
+[node name="Lake" instance=ExtResource("1_u7tqy")]
+card_name = "lake"
+custom_tooltip_text = "affects adjacent paths"
+nice_score = 1
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_civdk")

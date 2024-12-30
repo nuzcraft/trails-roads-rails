@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2j1ybsykkfj6"]
+
+[ext_resource type="PackedScene" uid="uid://dpdnyhu2y85pc" path="res://scenes/card/feature_card/feature_card.tscn" id="1_iafqf"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_fj76q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7q125"]
+atlas = ExtResource("2_fj76q")
+region = Rect2(128, 176, 16, 16)
+
+[node name="Hills" instance=ExtResource("1_iafqf")]
+card_name = "hills"
+custom_tooltip_text = "low rolling hills"
+nice_score = 2
+exciting_score = 2
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_7q125")

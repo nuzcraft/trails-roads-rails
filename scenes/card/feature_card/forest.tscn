@@ -3,3 +3,5 @@
 [ext_resource type="PackedScene" uid="uid://dpdnyhu2y85pc" path="res://scenes/card/feature_card/feature_card.tscn" id="1_by74m"]
 
 [node name="Forest" instance=ExtResource("1_by74m")]
+custom_tooltip_text = "forests affect path types differently"
+exciting_score = 1

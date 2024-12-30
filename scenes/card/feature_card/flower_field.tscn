@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbnscn0xqwynu"]
+
+[ext_resource type="PackedScene" uid="uid://dpdnyhu2y85pc" path="res://scenes/card/feature_card/feature_card.tscn" id="1_mmabv"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_seg7j"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lkpu5"]
+atlas = ExtResource("2_seg7j")
+region = Rect2(128, 208, 16, 16)
+
+[node name="FlowerField" instance=ExtResource("1_mmabv")]
+card_name = "flower field"
+custom_tooltip_text = "smells nice"
+nice_score = 5
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_lkpu5")
