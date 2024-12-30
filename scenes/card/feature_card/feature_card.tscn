@@ -43,9 +43,3 @@ texture = SubResource("AtlasTexture_1iw7x")
 
 [node name="Label" parent="PanelContainer/VBoxContainer" index="3"]
 text = "forest"
-
-[node name="NiceLabel" parent="PanelContainer/VBoxContainer/HBoxContainer" index="0"]
-visible = false
-
-[node name="ExcitingLabel" parent="PanelContainer/VBoxContainer/HBoxContainer" index="1"]
-visible = false

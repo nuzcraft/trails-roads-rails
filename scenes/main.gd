@@ -44,6 +44,9 @@ const SOUTH_EAST_RAIL = preload("res://scenes/card/rail/south_east_rail.tscn")
 const SOUTH_WEST_RAIL = preload("res://scenes/card/rail/south_west_rail.tscn")
 # feature cards
 const FOREST = preload("res://scenes/card/feature_card/forest.tscn")
+const HILLS = preload("res://scenes/card/feature_card/hills.tscn")
+const MOUNTAIN = preload("res://scenes/card/feature_card/mountain.tscn")
+const FLOWER_FIELD = preload("res://scenes/card/feature_card/flower_field.tscn")
 
 # other scenes
 const POP_UP = preload("res://scenes/pop_up.tscn")
@@ -51,6 +54,9 @@ const DECK_EDIT_MENU = preload("res://scenes/deck_edit_menu.tscn")
 
 # feature atlas position
 const FOREST_ATLAS: Array[Vector2] = [Vector2(4, 5), Vector2(4, 6)]
+const HILL_ATLAS: Array[Vector2] = [Vector2(8, 11)]
+const MOUNTAIN_ATLAS: Array[Vector2] = [Vector2(8, 12)]
+const FLOWER_FIELD_ATLAS: Array[Vector2] = [Vector2(8, 13)]
 
 var astar: AStar2D
 var all_cards: Array[Card]
@@ -133,6 +139,16 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 			cell_coord == source or cell_coord == target:
 		card.switch_state_to_static(true)
 		return
+	if card.card_name == "mountain":
+		for coord in cards_in_play.keys():
+			if coord == cell_coord and cards_in_play[coord].type != "trail":
+				card.switch_state_to_static(true)
+				return
+	if card.type != "trail" && card.type != "feature":
+		print(tile_map_layer_feature.get_cell_atlas_coords(cell_coord))
+		if MOUNTAIN_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell_coord))):
+			card.switch_state_to_static(true)
+			return
 	match card.type:
 		"feature":
 			tile_map_layer_feature.set_cell(cell_coord, 0, atlas_position)
@@ -250,9 +266,12 @@ func add_card_to_deck(card: Card) -> void:
 	
 func add_card_to_all(card: Card) -> void:
 	all_cards.append(card)
-	card.card_dropped.connect(on_card_dropped)
-	card.card_picked_up.connect(on_card_picked_up)
-	card.card_returned_to_hand.connect(on_card_returned_to_hand)
+	if not card.card_dropped.is_connected(on_card_dropped):
+		card.card_dropped.connect(on_card_dropped)
+	if not card.card_picked_up.is_connected(on_card_picked_up):
+		card.card_picked_up.connect(on_card_picked_up)
+	if not card.card_returned_to_hand.is_connected(on_card_returned_to_hand):
+		card.card_returned_to_hand.connect(on_card_returned_to_hand)
 	
 func draw_cards_to_hand(num: int) -> void:
 	deck_cards.shuffle()
@@ -324,6 +343,17 @@ func tally_score(path: Array) -> void:
 						await score_popup("nice", forest_nice, path[i], dur, "+", false)
 					if forest_exciting:
 						await score_popup("exciting", forest_exciting, path[i], dur, "+", false)
+				if Vector2(cell) == path[i] and \
+						MOUNTAIN_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell))):
+					await score_popup("nice", 3, path[i], dur, "+", false)
+					await score_popup("exciting", 3, path[i], dur, "+", false)
+				if Vector2(cell) == path[i] and \
+						HILL_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell))):
+					await score_popup("nice", 2, path[i], dur, "+", false)
+					await score_popup("exciting", 2, path[i], dur, "+", false)
+				if Vector2(cell) == path[i] and \
+						FLOWER_FIELD_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell))):
+					await score_popup("nice", 5, path[i], dur, "+", false)
 			# check for combo
 			if cards_in_play.has(path[i-1]):
 				var prev_card: Card = cards_in_play[path[i-1]]
@@ -545,12 +575,16 @@ func create_deck_edit_menu():
 	add_child(deck_edit_menu)
 	deck_edit_menu.next_level.connect(next_level)
 	all_cards.shuffle()
-	#var arr = [VERT_RAIL_CARD, VERT_ROAD_CARD, VERT_TRAIL_CARD, \
-			#HORIZ_RAIL_CARD, HORIZ_ROAD_CARD, HORIZ_TRAIL_CARD]
-	var arr = [FOREST]
+	var arr = [FOREST, HILLS, MOUNTAIN, FLOWER_FIELD]
+	var arr2 = [VERT_RAIL_CARD, VERT_ROAD_CARD, VERT_TRAIL_CARD, \
+			HORIZ_RAIL_CARD, HORIZ_ROAD_CARD, HORIZ_TRAIL_CARD]
 	for i in 4:
 		var crd = all_cards.pop_front()
 		deck_edit_menu.add_card_to_delete_list(crd)
-		var crd2 = arr.pick_random().instantiate()
-		deck_edit_menu.add_card_to_add_list(crd2)
+		if i % 2:
+			var crd2 = arr.pick_random().instantiate()
+			deck_edit_menu.add_card_to_add_list(crd2)
+		else:
+			var crd2 = arr2.pick_random().instantiate()
+			deck_edit_menu.add_card_to_add_list(crd2)
 	
