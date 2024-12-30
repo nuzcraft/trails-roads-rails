@@ -1,0 +1,128 @@
+[gd_scene load_steps=6 format=3 uid="uid://dun3w6hufufbc"]
+
+[ext_resource type="Theme" uid="uid://cre4ao7e05vhg" path="res://main.theme" id="1_eslsl"]
+[ext_resource type="Script" path="res://scenes/deck_edit_menu.gd" id="2_4r51j"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hw160"]
+font_size = 48
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycef6"]
+font_size = 32
+font_color = Color(0.909804, 0.270588, 0.215686, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xhyuw"]
+font_size = 32
+font_color = Color(0.666667, 0.890196, 0.576471, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(3, 3)
+
+[node name="DeckEditMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_eslsl")
+script = ExtResource("2_4r51j")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.321569, 0.376471, 0.486275, 1)
+
+[node name="ChooseLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+grow_horizontal = 2
+grow_vertical = 2
+text = "choose up to
+~ 2 ~
+more tiles"
+label_settings = SubResource("LabelSettings_hw160")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeletePanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(0.909804, 0.270588, 0.215686, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.45
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="DeletePanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="DeleteTileGridContainer" type="HBoxContainer" parent="DeletePanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="RemoveLabel" type="Label" parent="DeletePanelContainer/MarginContainer/DeleteTileGridContainer"]
+layout_mode = 2
+text = "REMOVE"
+label_settings = SubResource("LabelSettings_ycef6")
+
+[node name="AddPanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(0.666667, 0.890196, 0.576471, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.7
+anchor_right = 0.5
+anchor_bottom = 0.75
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="AddPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="AddTileGridContainer" type="HBoxContainer" parent="AddPanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="AddLabel" type="Label" parent="AddPanelContainer/MarginContainer/AddTileGridContainer"]
+layout_mode = 2
+text = "ADD"
+label_settings = SubResource("LabelSettings_xhyuw")
+
+[node name="NextLevelButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.9
+anchor_right = 0.5
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+text = "Next Level"
+
+[connection signal="pressed" from="NextLevelButton" to="." method="_on_next_level_button_pressed"]

@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpdnyhu2y85pc"]
+
+[ext_resource type="PackedScene" uid="uid://cxvwx7q4ct2qd" path="res://scenes/card/card.tscn" id="1_wyio3"]
+[ext_resource type="Texture2D" uid="uid://cg3h6g2bsiy8s" path="res://assets/kenney-tiny-battle/tilemap_packed.png" id="2_snylm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wqlot"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.666667, 0.890196, 0.576471, 1)
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1iw7x"]
+atlas = ExtResource("2_snylm")
+region = Rect2(64, 80, 16, 16)
+
+[node name="FeatureCard" instance=ExtResource("1_wyio3")]
+card_name = "forest"
+type = "feature"
+custom_tooltip_text = "+1 EXCITING for most paths"
+connection_array = Array[String]([])
+combo_score = 0
+
+[node name="PanelContainer" parent="." index="0"]
+self_modulate = Color(0.666667, 0.890196, 0.576471, 1)
+
+[node name="Panel" parent="PanelContainer" index="0"]
+self_modulate = Color(0.666667, 0.890196, 0.576471, 1)
+
+[node name="BorderPanel3" type="Panel" parent="PanelContainer" index="1"]
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_wqlot")
+
+[node name="TextureRect" parent="PanelContainer/VBoxContainer" index="1"]
+texture = SubResource("AtlasTexture_1iw7x")
+
+[node name="Label" parent="PanelContainer/VBoxContainer" index="3"]
+text = "forest"
+
+[node name="NiceLabel" parent="PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+visible = false
+
+[node name="ExcitingLabel" parent="PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+visible = false
