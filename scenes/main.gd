@@ -145,7 +145,7 @@ func on_card_dropped(card: Card, atlas_position: Vector2) -> void:
 				card.switch_state_to_static(true)
 				return
 	if card.type != "trail" && card.type != "feature":
-		print(tile_map_layer_feature.get_cell_atlas_coords(cell_coord))
+		# print(tile_map_layer_feature.get_cell_atlas_coords(cell_coord))
 		if MOUNTAIN_ATLAS.has(Vector2(tile_map_layer_feature.get_cell_atlas_coords(cell_coord))):
 			card.switch_state_to_static(true)
 			return
